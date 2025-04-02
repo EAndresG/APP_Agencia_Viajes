@@ -4,16 +4,19 @@ function App() {
   const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/') // Asegúrate de que este es el endpoint correcto
-      .then(response => response.text()) // Si el backend responde con texto
-      .then(data => setMensaje(data)) // Guardar en el estado
+    fetch('http://localhost:6000/')  // Asegúrate de que Express está en el puerto 5000
+      .then(response => response.text())
+      .then(data => {
+        console.log('Respuesta del backend:', data);
+        setMensaje(data); // Guardar la respuesta en el estado
+      })
       .catch(error => console.error('Error al conectar con el backend:', error));
   }, []);
 
   return (
     <div>
       <h1>Conectando React con Express</h1>
-      <p>{mensaje}</p> {/* Aquí se muestra el mensaje del backend */}
+      <p>{mensaje}</p> {/* Ahora sí muestra el mensaje del backend */}
     </div>
   );
 }
