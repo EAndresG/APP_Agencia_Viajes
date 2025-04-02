@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [mensaje, setMensaje] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:3000/') // Asegúrate de que este es el endpoint correcto
+      .then(response => response.text()) // Si el backend responde con texto
+      .then(data => setMensaje(data)) // Guardar en el estado
+      .catch(error => console.error('Error al conectar con el backend:', error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Conectando React con Express</h1>
+      <p>{mensaje}</p> {/* Aquí se muestra el mensaje del backend */}
     </div>
   );
 }
