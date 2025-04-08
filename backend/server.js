@@ -1,13 +1,26 @@
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-
 const app = express();
-app.use(cors());  // Habilita CORS para permitir solicitudes desde React
+const db = require('./config/db');
 
-app.get('/', (req, res) => {
-    res.send('¡Hola, mundo desde Express!');
-});
+const authRoutes = require('./routes/auth');
+const usuarioRoutes = require('./routes/usuarios');
+const agenciaRoutes = require('./routes/agencias');
+const paqueteRoutes = require('./routes/paquetes');
+const articuloRoutes = require('./routes/articulos');
+const adminRoutes = require('./routes/admin');
 
-app.listen(5000, () => {
-    console.log('Servidor corriendo en http://localhost:5000');
-});
+app.use(express.json());
+
+app.use('/auth', authRoutes);
+app.use('/usuarios', usuarioRoutes);
+app.use('/agencias', agenciaRoutes);
+app.use('/paquetes', paqueteRoutes);
+app.use('/articulos', articuloRoutes);
+app.use('/admin', adminRoutes);
+
+const PORT = process.env.PORT || 3000;
+db.sync({ alter: true }).then(() => {
+    console.log('DB conectada.');
+    app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+}).catch(err => console.error('Error conectando DB:', err));
