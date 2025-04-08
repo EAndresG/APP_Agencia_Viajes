@@ -1,0 +1,25 @@
+### Registrar usuario
+POST http://localhost:3000/auth/register-usuario
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "nombre_usuario": "juan123",
+  "cedula": "123456789",
+  "correo": "juan@email.com",
+  "contraseña": "password123"
+}
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "nombre_usuario": "juan123",
+  "contraseña": "password123"
+}
+
+### Ver perfil de usuario (pega el token)
+GET http://localhost:3000/api/usuarios/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDA3ODE5MCwiZXhwIjoxNzQ0NjgyOTkwfQ.W05mPY3rXAYQyPiG9UQZanxVhuS7AfvxUOjfILbfLtg

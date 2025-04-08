@@ -46,3 +46,22 @@ router.delete('/:id', auth(['agencia', 'admin']), async (req, res) => {
         res.status(403).json({ mensaje: 'No autorizado' });
     }
 });
+
+// Calificaciones
+router.post('/:id/calificar', auth(['usuario']), async (req, res) => {
+    const nueva = await Calificacion.create({
+        ...req.body,
+        PaqueteId: req.params.id,
+        UsuarioId: req.user.id
+    });
+    res.json(nueva);
+});
+
+router.get('/:id/calificaciones', async (req, res) => {
+    const calificaciones = await Calificacion.findAll({ where: { PaqueteId: req.params.id } });
+    res.json(calificaciones);
+});
+
+module.exports = router;
+
+
