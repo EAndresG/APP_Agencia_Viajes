@@ -34,5 +34,8 @@ app.use('/api/admin', adminRoutes);
 const PORT = process.env.PORT || 3000;
 db.sync({ alter: true }).then(() => {
     console.log('DB conectada.');
-    app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+    app.listen(PORT, () => {
+        console.log(`Servidor corriendo en puerto ${PORT}`);
+        console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    });
 }).catch(err => console.error('Error conectando DB:', err));
