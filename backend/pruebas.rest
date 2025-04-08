@@ -1,14 +1,15 @@
 ### Registrar usuario
-POST http://localhost:3000/auth/register-usuario
+POST http://localhost:3000/api/auth/register-usuario
 Content-Type: application/json
 
 {
-  "nombre": "Juan",
-  "apellido": "Pérez",
-  "nombre_usuario": "juan123",
-  "cedula": "123456789",
-  "correo": "juan@email.com",
-  "contraseña": "password123"
+  "nombre": "Admin",
+  "apellido": "User",
+  "nombre_usuario": "admin123",
+  "cedula": "987654321",
+  "correo": "admin@email.com",
+  "contraseña": "adminpassword",
+  "rol": "admin"
 }
 
 ### Login
@@ -16,10 +17,19 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "nombre_usuario": "juan123",
-  "contraseña": "password123"
+  "nombre_usuario": "admin123",
+  "contraseña": "adminpassword"
 }
 
 ### Ver perfil de usuario (pega el token)
 GET http://localhost:3000/api/usuarios/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDA3OTMyOSwiZXhwIjoxNzQ0Njg0MTI5fQ.FeF5AU9WieAj_V2gmqtGPqRO5aZ_3Ke9by-CNlx0Ypk
+
+### Actualizar rol de usuario
+PUT http://localhost:3000/api/admin/usuarios/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sImlhdCI6MTc0NDA3OTMyOSwiZXhwIjoxNzQ0Njg0MTI5fQ.FeF5AU9WieAj_V2gmqtGPqRO5aZ_3Ke9by-CNlx0Ypk
+Content-Type: application/json
+
+{
+  "rol": "admin"
+}

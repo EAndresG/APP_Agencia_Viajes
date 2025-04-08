@@ -6,9 +6,9 @@ const { Usuario, Agencia } = require('../models');
 
 router.post('/register-usuario', async (req, res) => {
     try {
-        const { nombre, apellido, nombre_usuario, cedula, correo, contraseña } = req.body;
+        const { nombre, apellido, nombre_usuario, cedula, correo, contraseña, rol = 'usuario' } = req.body;
         const hashed = await bcrypt.hash(contraseña, 10);
-        const nuevo = await Usuario.create({ nombre, apellido, nombre_usuario, cedula, correo, contraseña: hashed });
+        const nuevo = await Usuario.create({ nombre, apellido, nombre_usuario, cedula, correo, contraseña: hashed, rol });
         res.json(nuevo);
     } catch (err) {
         res.status(400).json({ error: err.message });

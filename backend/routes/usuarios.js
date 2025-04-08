@@ -9,4 +9,8 @@ router.get('/:id', auth(['usuario', 'admin']), async (req, res) => {
     usuario ? res.json(usuario) : res.status(404).json({ mensaje: 'No encontrado' });
 });
 
+router.get('/ruta-protegida', auth(['admin', 'agencia']), (req, res) => {
+    res.json({ mensaje: 'Acceso permitido' });
+});
+
 module.exports = router;

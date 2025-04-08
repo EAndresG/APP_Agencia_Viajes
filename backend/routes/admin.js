@@ -10,7 +10,9 @@ router.get('/usuarios', auth(['admin']), async (req, res) => {
 
 router.put('/usuarios/:id', auth(['admin']), async (req, res) => {
     const usuario = await Usuario.findByPk(req.params.id);
-    usuario ? await usuario.update(req.body) && res.json(usuario) : res.status(404).json({ mensaje: 'No encontrado' });
+    if (!usuario) return res.status(404).json({ mensaje: 'No encontrado' });
+    await usuario.update(req.body);
+    res.json(usuario);
 });
 
 router.delete('/usuarios/:id', auth(['admin']), async (req, res) => {
