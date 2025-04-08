@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### Login
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -22,14 +22,44 @@ Content-Type: application/json
 }
 
 ### Ver perfil de usuario (pega el token)
-GET http://localhost:3000/api/usuarios/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDA3OTMyOSwiZXhwIjoxNzQ0Njg0MTI5fQ.FeF5AU9WieAj_V2gmqtGPqRO5aZ_3Ke9by-CNlx0Ypk
+GET http://localhost:3000/api/usuarios/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODAwMCwiZXhwIjoxNzQ0NzMyODAwfQ.0ptxNPeZgYt6JZray7ns2crPD4hKrJLju6kaXeD2Cz0
+Content-Type: application/json
 
 ### Actualizar rol de usuario
-PUT http://localhost:3000/api/admin/usuarios/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sImlhdCI6MTc0NDA3OTMyOSwiZXhwIjoxNzQ0Njg0MTI5fQ.FeF5AU9WieAj_V2gmqtGPqRO5aZ_3Ke9by-CNlx0Ypk
+PUT http://localhost:3000/api/admin/usuarios/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODU1MiwiZXhwIjoxNzQ0NzMzMzUyfQ.RVPDetTlr70lmNOBhU7i4ngIAyQZxwN_PMpsuJpjoxw
 Content-Type: application/json
 
 {
   "rol": "admin"
 }
+
+### Obtener lista de usuarios
+GET http://localhost:3000/api/admin/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
+Content-Type: application/json
+
+### Registrar administrador con permisos totales
+POST http://localhost:3000/api/admin/admins
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODU1MiwiZXhwIjoxNzQ0NzMzMzUyfQ.RVPDetTlr70lmNOBhU7i4ngIAyQZxwN_PMpsuJpjoxw
+Content-Type: application/json
+
+{
+  "UsuarioId": 1,
+  "nivel_permiso": "total"
+}
+
+### Actualizar nivel de permiso de un administrador
+PUT http://localhost:3000/api/admin/admins/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
+Content-Type: application/json
+
+{
+  "nivel_permiso": "moderador"
+}
+
+### Obtener lista de administradores
+GET http://localhost:3000/api/admin/admins
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
+Content-Type: application/json
