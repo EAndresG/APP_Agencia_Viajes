@@ -1,0 +1,9 @@
+// filepath: c:\Users\erick\OneDrive\Documents\vtcode\APP_Agencia_Viajes\backend\.sequelizerc
+const path = require('path');
+
+module.exports = {
+    'config': path.resolve('config', 'config.js'),
+    'models-path': path.resolve('models'),
+    'migrations-path': path.resolve('migrations'),
+    'seeders-path': path.resolve('seeders')
+};

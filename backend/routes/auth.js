@@ -3,8 +3,18 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const generateToken = require('../utils/generateToken');
 const { Usuario, Agencia } = require('../models');
+const { check, validationResult } = require('express-validator');
 
-router.post('/register-usuario', async (req, res) => {
+router.post('/register-usuario', [
+    check('nombre').notEmpty().withMessage('El nombre es obligatorio'),
+    check('correo').isEmail().withMessage('Correo inválido'),
+    check('contraseña').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
+], async (req, res) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return res.status(400).json({ errores: errores.array() });
+    }
+
     try {
         const { nombre, apellido, nombre_usuario, cedula, correo, contraseña, rol = 'usuario' } = req.body;
         const hashed = await bcrypt.hash(contraseña, 10);

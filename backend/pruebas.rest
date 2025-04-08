@@ -1,65 +1,34 @@
-### Registrar usuario
 POST http://localhost:3000/api/auth/register-usuario
 Content-Type: application/json
 
 {
-  "nombre": "Admin",
-  "apellido": "User",
-  "nombre_usuario": "admin123",
-  "cedula": "987654321",
-  "correo": "admin@email.com",
-  "contraseña": "adminpassword",
-  "rol": "admin"
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "nombre_usuario": "juan123",
+  "cedula": "123456789",
+  "correo": "juan@email.com",
+  "contraseña": "password123",
+  "rol": "usuario"
 }
 
-### Login
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "nombre_usuario": "admin123",
-  "contraseña": "adminpassword"
+  "nombre_usuario": "juan123",
+  "contraseña": "password123"
 }
 
-### Ver perfil de usuario (pega el token)
-GET http://localhost:3000/api/usuarios/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODAwMCwiZXhwIjoxNzQ0NzMyODAwfQ.0ptxNPeZgYt6JZray7ns2crPD4hKrJLju6kaXeD2Cz0
-Content-Type: application/json
-
-### Actualizar rol de usuario
-PUT http://localhost:3000/api/admin/usuarios/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODU1MiwiZXhwIjoxNzQ0NzMzMzUyfQ.RVPDetTlr70lmNOBhU7i4ngIAyQZxwN_PMpsuJpjoxw
+POST http://localhost:3000/api/paquetes
+Authorization: Bearer <tu_token>
 Content-Type: application/json
 
 {
-  "rol": "admin"
+  "titulo": "Paquete Playa",
+  "descripcion": "Disfruta de un día en la playa",
+  "precio": 100,
+  "destino": "Buenaventura",
+  "incluye_transporte": true,
+  "hotel_frente_mar": false,
+  "comidas_incluidas": true
 }
-
-### Obtener lista de usuarios
-GET http://localhost:3000/api/admin/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
-Content-Type: application/json
-
-### Registrar administrador con permisos totales
-POST http://localhost:3000/api/admin/admins
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODU1MiwiZXhwIjoxNzQ0NzMzMzUyfQ.RVPDetTlr70lmNOBhU7i4ngIAyQZxwN_PMpsuJpjoxw
-Content-Type: application/json
-
-{
-  "UsuarioId": 1,
-  "nivel_permiso": "total"
-}
-
-### Actualizar nivel de permiso de un administrador
-PUT http://localhost:3000/api/admin/admins/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
-Content-Type: application/json
-
-{
-  "nivel_permiso": "moderador"
-}
-
-### Obtener lista de administradores
-GET http://localhost:3000/api/admin/admins
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDEyODI1NiwiZXhwIjoxNzQ0NzMzMDU2fQ.UASKSqRvqjVS4USpia1wuA38-yxOOeHnJ0xJmun6-Zs
-Content-Type: application/json

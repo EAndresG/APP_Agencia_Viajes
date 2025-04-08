@@ -2,14 +2,27 @@ const express = require('express');
 const router = express.Router();
 const { Paquete, Calificacion } = require('../models');
 const auth = require('../middlewares/authMiddleware');
+const redis = require('redis');
+const client = redis.createClient();
 
 router.get('/', async (req, res) => {
-    const { destino, precio } = req.query;
+    const { destino, precio, page = 1, limit = 10 } = req.query;
     const filtros = {};
     if (destino) filtros.destino = destino;
     if (precio) filtros.precio = { lte: precio };
-    const paquetes = await Paquete.findAll({ where: filtros });
-    res.json(paquetes);
+
+    const offset = (page - 1) * limit;
+    const paquetes = await Paquete.findAndCountAll({
+        where: filtros,
+        limit: parseInt(limit),
+        offset: parseInt(offset)
+    });
+
+    res.json({
+        total: paquetes.count,
+        paginas: Math.ceil(paquetes.count / limit),
+        data: paquetes.rows
+    });
 });
 
 router.get('/:id', async (req, res) => {
@@ -60,6 +73,18 @@ router.post('/:id/calificar', auth(['usuario']), async (req, res) => {
 router.get('/:id/calificaciones', async (req, res) => {
     const calificaciones = await Calificacion.findAll({ where: { PaqueteId: req.params.id } });
     res.json(calificaciones);
+});
+
+router.get('/populares', async (req, res) => {
+    client.get('paquetes_populares', async (err, data) => {
+        if (data) {
+            return res.json(JSON.parse(data));
+        } else {
+            const paquetes = await Paquete.findAll({ order: [['popularidad', 'DESC']], limit: 10 });
+            client.setex('paquetes_populares', 3600, JSON.stringify(paquetes)); // Cache por 1 hora
+            res.json(paquetes);
+        }
+    });
 });
 
 module.exports = router;

@@ -4,11 +4,10 @@ const { Admin } = require('../models');
 module.exports = (roles = []) => {
     return async (req, res, next) => {
         const token = req.headers.authorization?.split(' ')[1];
-        console.log('Token recibido:', token);
         if (!token) return res.status(401).json({ mensaje: 'Token requerido' });
+
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log('Usuario decodificado:', decoded);
 
             // Verificar roles
             if (roles.length && !roles.includes(decoded.rol)) {

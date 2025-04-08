@@ -25,10 +25,19 @@ app.use(express.json());
 // Usa las rutas correctamente
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/agencias', agenciasRoutes);
-app.use('/api/paquetes', paquetesRoutes);
-app.use('/api/articulos', articulosRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Swagger setup
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({ error: err.message });
+});
 
 // Configuración del servidor
 const PORT = process.env.PORT || 3000;
