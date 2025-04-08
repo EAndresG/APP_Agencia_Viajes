@@ -22,4 +22,4 @@ Content-Type: application/json
 
 ### Ver perfil de usuario (pega el token)
 GET http://localhost:3000/api/usuarios/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDA3ODUyNiwiZXhwIjoxNzQ0NjgzMzI2fQ.PWGdOw2epMa7hbVudrpsI50hRYaOhrz5yOy1sHRFUB4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sIjoidXN1YXJpbyIsImlhdCI6MTc0NDA3OTMyOSwiZXhwIjoxNzQ0Njg0MTI5fQ.FeF5AU9WieAj_V2gmqtGPqRO5aZ_3Ke9by-CNlx0Ypk
