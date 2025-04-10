@@ -2,49 +2,39 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const db = require('./config/db');
+const authRoutes = require('./routes/auth.routes');
+const usuarioRoutes = require('./routes/usuario.routes');
+const paqueteRoutes = require('./routes/paquete.routes');
+const calificacionRoutes = require('./routes/calificacion.routes');
+const articuloRoutes = require('./routes/articulo.routes');
+const adminRoutes = require('./routes/admin.routes');
 
-// Importa las rutas correctamente
-const authRoutes = require('./routes/auth');
-const usuariosRoutes = require('./routes/usuarios'); // Cambiado a usuariosRoutes
-const agenciasRoutes = require('./routes/agencias'); // Cambiado a agenciasRoutes
-const paquetesRoutes = require('./routes/paquetes'); // Cambiado a paquetesRoutes
-const articulosRoutes = require('./routes/articulos'); // Cambiado a articulosRoutes
-const adminRoutes = require('./routes/admin'); // Cambiado a adminRoutes
 
-// Verifica que las rutas sean funciones válidas
-console.log('authRoutes:', typeof authRoutes); // Debe ser "function"
-console.log('usuariosRoutes:', typeof usuariosRoutes); // Debe ser "function"
-console.log('agenciasRoutes:', typeof agenciasRoutes); // Debe ser "function"
-console.log('paquetesRoutes:', typeof paquetesRoutes); // Debe ser "function"
-console.log('articulosRoutes:', typeof articulosRoutes); // Debe ser "function"
-console.log('adminRoutes:', typeof adminRoutes); // Debe ser "function"
 
-// Middlewares
 app.use(express.json());
 
-// Usa las rutas correctamente
-app.use('/api/auth', authRoutes);
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/admin', adminRoutes);
+// Rutas
+app.use('/auth', authRoutes);
+app.use('/usuarios', usuarioRoutes);
+app.use('/paquetes', paqueteRoutes);
+app.use('/paquetes', calificacionRoutes); // calificaciones usan /paquetes/:id/calificar
+app.use('/articulos', articuloRoutes);
+app.use('/admin', adminRoutes);
 
-// Swagger setup
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+// Verificar conexión a DB
+db.authenticate()
+  .then(() => console.log('Conexión a la base de datos exitosa.'))
+  .catch(err => console.error('Error al conectar a la base de datos:', err));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Iniciar servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(err.status || 500).json({ error: err.message });
+  console.log('El servidor ha iniciado correctamente.');
 });
 
-// Configuración del servidor
-const PORT = process.env.PORT || 3000;
-db.sync({ alter: true }).then(() => {
-    console.log('DB conectada.');
-    app.listen(PORT, () => {
-        console.log(`Servidor corriendo en puerto ${PORT}`);
-        console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    });
-}).catch(err => console.error('Error conectando DB:', err));
+// Descomenta esto una sola vez para crear las tablas en DB
+// const { db } = require('./models');
+// db.sync({ alter: true }).then(() => console.log("Tablas sincronizadas."));
+

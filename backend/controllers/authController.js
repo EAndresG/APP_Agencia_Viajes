@@ -1,51 +1,40 @@
-const { Usuario, Agencia } = require('../models');
+const { Usuario } = require('../models');
 const bcrypt = require('bcrypt');
-const generateToken = require('../utils/generateToken');
+const jwt = require('jsonwebtoken');
+const { secret, expiresIn } = require('../config/jwt');
 
-exports.registerUsuario = async (req, res) => {
-    try {
-        const hash = await bcrypt.hash(req.body.contraseña, 10);
-        const nuevo = await Usuario.create({
-            ...req.body,
-            contraseña: hash,
-            rol: 'usuario'
-        });
-        const token = generateToken({ id: nuevo.id_usuario, rol: nuevo.rol });
-        res.json({ token });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-};
-
-exports.registerAgencia = async (req, res) => {
-    try {
-        const hash = await bcrypt.hash(req.body.contraseña, 10);
-        const nueva = await Agencia.create({
-            ...req.body,
-            contraseña: hash
-        });
-        const token = generateToken({ id: nueva.id_agencia, rol: 'agencia' });
-        res.json({ token });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+exports.register = async (req, res) => {
+  try {
+    const { nombre, correo, contraseña, rol } = req.body;
+    const hashedPassword = await bcrypt.hash(contraseña, 10);
+    const nuevoUsuario = await Usuario.create({
+      nombre,
+      correo,
+      contraseña: hashedPassword,
+      rol
+    });
+    res.status(201).json({ mensaje: 'Usuario registrado correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al registrar usuario', detalle: error.message });
+  }
 };
 
 exports.login = async (req, res) => {
-    const { nombre_usuario, contraseña } = req.body;
+  try {
+    const { correo, contraseña } = req.body;
+    const usuario = await Usuario.findOne({ where: { correo } });
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
 
-    let user = await Usuario.findOne({ where: { nombre_usuario } });
-    let role = 'usuario';
-    if (!user) {
-        user = await Agencia.findOne({ where: { nombre_usuario } });
-        role = 'agencia';
-    }
+    const passwordValida = await bcrypt.compare(contraseña, usuario.contraseña);
+    if (!passwordValida) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
-    if (!user) return res.status(404).json({ mensaje: 'No encontrado' });
-
-    const valido = await bcrypt.compare(contraseña, user.contraseña);
-    if (!valido) return res.status(401).json({ mensaje: 'Contraseña incorrecta' });
-
-    const token = generateToken({ id: user.id_usuario || user.id_agencia, rol: role });
-    res.json({ token });
+    const token = jwt.sign(
+      { id: usuario.id_usuario, rol: usuario.rol },
+      secret,
+      { expiresIn }
+    );
+    res.json({ token, usuario: { id: usuario.id_usuario, rol: usuario.rol, nombre: usuario.nombre } });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al iniciar sesión' });
+  }
 };

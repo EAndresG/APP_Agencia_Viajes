@@ -1,23 +1,32 @@
-const sequelize = require('../config/db');
-const Usuario = require('./usuario');
-const Agencia = require('./agencia');
-const Paquete = require('./paquete');
-const Calificacion = require('./calificacion');
-const Articulo = require('./articulo');
-const Admin = require('./admin');
+const db = require('../config/db');
+const Usuario = require('./usuario.model');
+const Paquete = require('./paquete.model');
+const Calificacion = require('./calificacion.model');
+const Usuario = require('./usuario.model');
+const Articulo = require('./articulo.model');
+const Administrador = require('./administrador.model');
 
-Usuario.hasMany(Calificacion);
-Calificacion.belongsTo(Usuario);
+// Relaciones
+Usuario.hasMany(Paquete, { foreignKey: 'id_agencia' });
+Paquete.belongsTo(Usuario, { foreignKey: 'id_agencia' });
 
-Usuario.hasMany(Articulo);
-Articulo.belongsTo(Usuario);
+Usuario.hasMany(Calificacion, { foreignKey: 'id_usuario' });
+Paquete.hasMany(Calificacion, { foreignKey: 'id_paquete' });
 
-Agencia.hasMany(Paquete);
-Paquete.belongsTo(Agencia);
+Calificacion.belongsTo(Usuario, { foreignKey: 'id_usuario' });
+Calificacion.belongsTo(Paquete, { foreignKey: 'id_paquete' });
 
-Paquete.hasMany(Calificacion);
-Calificacion.belongsTo(Paquete);
+Usuario.hasMany(Articulo, { foreignKey: 'id_autor' });
+Articulo.belongsTo(Usuario, { foreignKey: 'id_autor' });
 
-Admin.belongsTo(Usuario);
+Usuario.hasOne(Administrador, { foreignKey: 'id_usuario' });
+Administrador.belongsTo(Usuario, { foreignKey: 'id_usuario' });
 
-module.exports = { sequelize, Usuario, Agencia, Paquete, Calificacion, Articulo, Admin };
+module.exports = {
+  db,
+  Usuario,
+  Paquete,
+  Calificacion,
+  Articulo,
+  Administrador
+};
