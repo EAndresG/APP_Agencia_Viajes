@@ -2,8 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { Paquete, Calificacion } = require('../models');
 const auth = require('../middlewares/authMiddleware');
-const redis = require('redis');
-const client = redis.createClient();
+// const redis = require('redis');
+// const client = redis.createClient();
+
+// client.on('error', (err) => {
+//     console.error('Error en Redis:', err);
+// });
+
+// client.connect().then(() => {
+//     console.log('Conectado a Redis');
+// });
 
 router.get('/', async (req, res) => {
     const { destino, precio, page = 1, limit = 10 } = req.query;
@@ -76,15 +84,15 @@ router.get('/:id/calificaciones', async (req, res) => {
 });
 
 router.get('/populares', async (req, res) => {
-    client.get('paquetes_populares', async (err, data) => {
-        if (data) {
-            return res.json(JSON.parse(data));
-        } else {
-            const paquetes = await Paquete.findAll({ order: [['popularidad', 'DESC']], limit: 10 });
-            client.setex('paquetes_populares', 3600, JSON.stringify(paquetes)); // Cache por 1 hora
-            res.json(paquetes);
-        }
-    });
+    // client.get('paquetes_populares', async (err, data) => {
+    //     if (data) {
+    //         return res.json(JSON.parse(data));
+    //     } else {
+    const paquetes = await Paquete.findAll({ order: [['popularidad', 'DESC']], limit: 10 });
+    // client.setex('paquetes_populares', 3600, JSON.stringify(paquetes)); // Cache por 1 hora
+    res.json(paquetes);
+    //     }
+    // });
 });
 
 module.exports = router;
