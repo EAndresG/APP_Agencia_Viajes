@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Packages from './pages/Packages';
+import Myagency from './pages/Myagency';
+import AdminPanel from './pages/AdminPanel';
 
 function App() {
-  const [mensaje, setMensaje] = useState('');
-
-  useEffect(() => {
-    fetch('http://localhost:5000/') // Asegúrate de que el backend esté en este puerto
-      .then(response => response.text())
-      .then(data => {
-        console.log('Respuesta del backend:', data);
-        setMensaje(data);
-      })
-      .catch(error => console.error('Error al conectar con el backend:', error));
-  }, []);
-
   return (
-    <div>
-      <h1>Conectando React con Express</h1>
-      <p>{mensaje}</p> {/* Muestra el mensaje del backend */}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/packages" element={<Packages />} />
+        <Route path="/myagency" element={<Myagency />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    </Router>
   );
 }
 
