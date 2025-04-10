@@ -2,7 +2,6 @@ const db = require('../config/db');
 const Usuario = require('./usuario.model');
 const Paquete = require('./paquete.model');
 const Calificacion = require('./calificacion.model');
-const Usuario = require('./usuario.model');
 const Articulo = require('./articulo.model');
 const Administrador = require('./administrador.model');
 
