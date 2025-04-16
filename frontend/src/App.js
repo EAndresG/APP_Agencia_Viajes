@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Packages from './pages/Packages';
 import Myagency from './pages/Myagency';
 import AdminPanel from './pages/AdminPanel';
+import Articulo from './pages/Articulo';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/packages" element={<Packages />} />
         <Route path="/myagency" element={<Myagency />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/Articulo" element={<Articulo />}/>
       </Routes>
     </Router>
   );

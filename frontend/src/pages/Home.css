@@ -1,0 +1,84 @@
+/* Estilos para el banner */
+.home-banner {
+    background-image: url('../Image/ImagenBanner.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.banner-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    background-color: #0088cc;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #006699;
+}
+
+/* Estilos para las secciones (vacation-ideas, recent-locations, why-different) */
+.vacation-ideas,
+.recent-locations,
+.why-different {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+/* Estilos para las tarjetas en cada sección */
+.ideas-grid,
+.locations-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.idea-card,
+.location-card {
+    background-color: #f2f2f2;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+}
+
+.idea-card:hover,
+.location-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo para la sección "¿Por qué elegirnos?" */
+.why-different {
+    background-color: #e9f7fa;
+}
+
+.why-different p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}

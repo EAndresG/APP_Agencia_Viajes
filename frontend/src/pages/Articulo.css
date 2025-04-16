@@ -1,0 +1,247 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+  }
+  
+  /* Contenedor principal */
+  .article-container {
+    max-width: 800px;
+    margin: 2rem auto; /* Añade margen superior e inferior */
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Encabezado del artículo */
+  .article-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 1.5rem;
+  }
+  
+  .article-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: #222;
+  }
+  
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Imagen principal */
+  .article-image-container {
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+  
+  .article-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+    text-align: center;
+    font-style: italic;
+  }
+  
+  /* Contenido del artículo */
+  .article-content {
+    margin-bottom: 2rem;
+  }
+  
+  .article-lead {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #444;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  
+  .article-content h2 {
+    font-size: 1.8rem;
+    margin: 2rem 0 1rem;
+    color: #222;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+  }
+  
+  .article-content p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .article-quote {
+    font-size: 1.3rem;
+    line-height: 1.4;
+    color: #555;
+    font-style: italic;
+    border-left: 4px solid #4a90e2;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  /* Etiquetas */
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .tag {
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+  }
+  
+  .tag:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+  }
+  
+  /* Compartir */
+  .article-share {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+  }
+  
+  .article-share h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .share-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .share-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  
+  .share-button:hover {
+    opacity: 0.9;
+  }
+  
+  .facebook {
+    background-color: #3b5998;
+  }
+  
+  .twitter {
+    background-color: #1da1f2;
+  }
+  
+  .linkedin {
+    background-color: #0077b5;
+  }
+  
+  /* Artículos relacionados */
+  .article-related {
+    margin-top: 3rem;
+  }
+  
+  .article-related h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 0.5rem;
+  }
+  
+  .related-articles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .related-article {
+    padding: 1rem;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .related-article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .related-article h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .related-article p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .article-container {
+      padding: 1.5rem;
+    }
+  
+    .article-title {
+      font-size: 2rem;
+    }
+  
+    .article-quote {
+      font-size: 1.1rem;
+    }
+  
+    .related-articles {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .article-container {
+      padding: 1rem;
+    }
+  
+    .article-title {
+      font-size: 1.8rem;
+    }
+  
+    .share-buttons {
+      flex-direction: column;
+    }
+  
+    .share-button {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
