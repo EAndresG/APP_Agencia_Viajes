@@ -49,6 +49,11 @@ const Navbar = () => {
                 Contacto
               </Link>
             </li>
+            <li className="nav-item ms-lg-3">
+              <Link className="btn btn-outline-primary" to="/login">
+                <i className="bi bi-person me-1"></i> Iniciar Sesión
+              </Link>
+            </li>
           </ul>
         </div>
 

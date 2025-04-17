@@ -1,0 +1,579 @@
+"use client"
+
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import "./Auth.css"
+
+const Register = () => {
+  const navigate = useNavigate()
+  const [userType, setUserType] = useState("user") // "user" o "guide"
+  const [step, setStep] = useState(1) // Para el formulario de múltiples pasos
+  const [formData, setFormData] = useState({
+    // Datos comunes
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    // Datos específicos para guías
+    companyName: "",
+    experience: "",
+    specialties: [],
+    description: "",
+    identification: "",
+    // Términos y condiciones
+    acceptTerms: false,
+  })
+  const [errors, setErrors] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [newSpecialty, setNewSpecialty] = useState("")
+
+  // Lista de especialidades disponibles para guías
+  const availableSpecialties = [
+    "Ecoturismo",
+    "Turismo Cultural",
+    "Turismo de Aventura",
+    "Turismo Gastronómico",
+    "Turismo de Playa",
+    "Turismo Urbano",
+    "Turismo Rural",
+  ]
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    })
+    // Limpiar error cuando el usuario comienza a escribir
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: "",
+      })
+    }
+  }
+
+  const handleAddSpecialty = () => {
+    if (newSpecialty && !formData.specialties.includes(newSpecialty)) {
+      setFormData({
+        ...formData,
+        specialties: [...formData.specialties, newSpecialty],
+      })
+      setNewSpecialty("")
+    }
+  }
+
+  const handleRemoveSpecialty = (specialty) => {
+    setFormData({
+      ...formData,
+      specialties: formData.specialties.filter((s) => s !== specialty),
+    })
+  }
+
+  const validateStep1 = () => {
+    const newErrors = {}
+
+    // Validar nombre
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "El nombre es obligatorio"
+    }
+
+    // Validar apellido
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "El apellido es obligatorio"
+    }
+
+    // Validar email
+    if (!formData.email) {
+      newErrors.email = "El correo electrónico es obligatorio"
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "El correo electrónico no es válido"
+    }
+
+    // Validar contraseña
+    if (!formData.password) {
+      newErrors.password = "La contraseña es obligatoria"
+    } else if (formData.password.length < 8) {
+      newErrors.password = "La contraseña debe tener al menos 8 caracteres"
+    }
+
+    // Validar confirmación de contraseña
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Las contraseñas no coinciden"
+    }
+
+    // Validar teléfono
+    if (!formData.phone) {
+      newErrors.phone = "El teléfono es obligatorio"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const validateStep2 = () => {
+    const newErrors = {}
+
+    if (userType === "guide") {
+      // Validar nombre de la empresa/agencia
+      if (!formData.companyName.trim()) {
+        newErrors.companyName = "El nombre de la empresa es obligatorio"
+      }
+
+      // Validar experiencia
+      if (!formData.experience) {
+        newErrors.experience = "La experiencia es obligatoria"
+      }
+
+      // Validar especialidades
+      if (formData.specialties.length === 0) {
+        newErrors.specialties = "Debes seleccionar al menos una especialidad"
+      }
+
+      // Validar descripción
+      if (!formData.description.trim()) {
+        newErrors.description = "La descripción es obligatoria"
+      }
+
+      // Validar identificación
+      if (!formData.identification.trim()) {
+        newErrors.identification = "El número de identificación es obligatorio"
+      }
+    }
+
+    // Validar términos y condiciones
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "Debes aceptar los términos y condiciones"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setStep(2)
+    }
+  }
+
+  const handlePrevStep = () => {
+    setStep(1)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (step === 1) {
+      handleNextStep()
+      return
+    }
+
+    if (validateStep2()) {
+      setIsLoading(true)
+
+      // Simulación de registro (reemplazar con llamada real a API)
+      setTimeout(() => {
+        setIsLoading(false)
+
+        // Redireccionar a la página de inicio de sesión o a una página de confirmación
+        navigate("/login", {
+          state: {
+            registrationSuccess: true,
+            userType: userType,
+          },
+        })
+
+        console.log("Registro exitoso como:", userType, formData)
+      }, 1500)
+    }
+  }
+
+  return (
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="row g-0">
+          {/* Imagen lateral */}
+          <div className="col-lg-6 d-none d-lg-block">
+            <div
+              className="auth-image"
+              style={{
+                backgroundImage: "url('https://v0.dev/placeholder.svg?height=800&width=600')",
+              }}
+            >
+              <div className="auth-image-overlay">
+                <div className="auth-image-content">
+                  <h2 className="display-6 text-white mb-4">Únete a nuestra comunidad</h2>
+                  <p className="text-white mb-4">
+                    {userType === "user"
+                      ? "Regístrate para descubrir experiencias únicas y planificar tus próximas vacaciones."
+                      : "Conviértete en guía turístico y comparte tu pasión por los viajes con viajeros de todo el mundo."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Formulario */}
+          <div className="col-lg-6">
+            <div className="auth-form-container">
+              <div className="text-center mb-4">
+                <Link to="/" className="text-decoration-none">
+                  <h1 className="h3 font-script text-primary">Private Holidays</h1>
+                </Link>
+                <h2 className="h4 mt-3">Crear una cuenta</h2>
+                <p className="text-muted">Completa el formulario para registrarte</p>
+              </div>
+
+              {/* Selector de tipo de usuario */}
+              <div className="user-type-selector mb-4">
+                <div className="btn-group w-100" role="group">
+                  <button
+                    type="button"
+                    className={`btn ${userType === "user" ? "btn-primary" : "btn-outline-primary"}`}
+                    onClick={() => setUserType("user")}
+                  >
+                    <i className="bi bi-person me-2"></i>
+                    Usuario
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${userType === "guide" ? "btn-primary" : "btn-outline-primary"}`}
+                    onClick={() => setUserType("guide")}
+                  >
+                    <i className="bi bi-compass me-2"></i>
+                    Guía Turístico
+                  </button>
+                </div>
+              </div>
+
+              {/* Indicador de pasos */}
+              <div className="steps-indicator mb-4">
+                <div className="row">
+                  <div className="col-6">
+                    <div className={`step ${step === 1 ? "active" : "completed"}`}>
+                      <div className="step-number">1</div>
+                      <div className="step-label">Información Personal</div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className={`step ${step === 2 ? "active" : ""}`}>
+                      <div className="step-number">2</div>
+                      <div className="step-label">
+                        {userType === "guide" ? "Información Profesional" : "Finalizar Registro"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                {step === 1 ? (
+                  // Paso 1: Información personal
+                  <>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label htmlFor="firstName" className="form-label">
+                          Nombre
+                        </label>
+                        <input
+                          type="text"
+                          className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
+                          id="firstName"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                        />
+                        {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label htmlFor="lastName" className="form-label">
+                          Apellido
+                        </label>
+                        <input
+                          type="text"
+                          className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
+                          id="lastName"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleChange}
+                        />
+                        {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="email" className="form-label">
+                        Correo Electrónico
+                      </label>
+                      <div className="input-group">
+                        <span className="input-group-text bg-white border-end-0">
+                          <i className="bi bi-envelope"></i>
+                        </span>
+                        <input
+                          type="email"
+                          className={`form-control border-start-0 ${errors.email ? "is-invalid" : ""}`}
+                          id="email"
+                          name="email"
+                          placeholder="correo@ejemplo.com"
+                          value={formData.email}
+                          onChange={handleChange}
+                        />
+                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="phone" className="form-label">
+                        Teléfono
+                      </label>
+                      <div className="input-group">
+                        <span className="input-group-text bg-white border-end-0">
+                          <i className="bi bi-phone"></i>
+                        </span>
+                        <input
+                          type="tel"
+                          className={`form-control border-start-0 ${errors.phone ? "is-invalid" : ""}`}
+                          id="phone"
+                          name="phone"
+                          placeholder="+57 300 123 4567"
+                          value={formData.phone}
+                          onChange={handleChange}
+                        />
+                        {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="password" className="form-label">
+                        Contraseña
+                      </label>
+                      <div className="input-group">
+                        <span className="input-group-text bg-white border-end-0">
+                          <i className="bi bi-lock"></i>
+                        </span>
+                        <input
+                          type="password"
+                          className={`form-control border-start-0 ${errors.password ? "is-invalid" : ""}`}
+                          id="password"
+                          name="password"
+                          placeholder="Mínimo 8 caracteres"
+                          value={formData.password}
+                          onChange={handleChange}
+                        />
+                        {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <label htmlFor="confirmPassword" className="form-label">
+                        Confirmar Contraseña
+                      </label>
+                      <div className="input-group">
+                        <span className="input-group-text bg-white border-end-0">
+                          <i className="bi bi-lock-fill"></i>
+                        </span>
+                        <input
+                          type="password"
+                          className={`form-control border-start-0 ${errors.confirmPassword ? "is-invalid" : ""}`}
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          placeholder="Repite tu contraseña"
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                        />
+                        {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                      </div>
+                    </div>
+
+                    <button type="button" className="btn btn-primary w-100" onClick={handleNextStep}>
+                      Continuar
+                    </button>
+                  </>
+                ) : (
+                  // Paso 2: Información profesional (para guías) o finalización (para usuarios)
+                  <>
+                    {userType === "guide" ? (
+                      // Campos adicionales para guías
+                      <>
+                        <div className="mb-3">
+                          <label htmlFor="companyName" className="form-label">
+                            Nombre de la Empresa/Agencia
+                          </label>
+                          <input
+                            type="text"
+                            className={`form-control ${errors.companyName ? "is-invalid" : ""}`}
+                            id="companyName"
+                            name="companyName"
+                            placeholder="Nombre de tu empresa o agencia"
+                            value={formData.companyName}
+                            onChange={handleChange}
+                          />
+                          {errors.companyName && <div className="invalid-feedback">{errors.companyName}</div>}
+                        </div>
+
+                        <div className="mb-3">
+                          <label htmlFor="experience" className="form-label">
+                            Años de Experiencia
+                          </label>
+                          <select
+                            className={`form-select ${errors.experience ? "is-invalid" : ""}`}
+                            id="experience"
+                            name="experience"
+                            value={formData.experience}
+                            onChange={handleChange}
+                          >
+                            <option value="">Selecciona una opción</option>
+                            <option value="0-1">Menos de 1 año</option>
+                            <option value="1-3">1-3 años</option>
+                            <option value="3-5">3-5 años</option>
+                            <option value="5-10">5-10 años</option>
+                            <option value="10+">Más de 10 años</option>
+                          </select>
+                          {errors.experience && <div className="invalid-feedback">{errors.experience}</div>}
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="form-label">Especialidades</label>
+                          <div className="input-group mb-2">
+                            <select
+                              className="form-select"
+                              value={newSpecialty}
+                              onChange={(e) => setNewSpecialty(e.target.value)}
+                            >
+                              <option value="">Selecciona especialidad</option>
+                              {availableSpecialties.map((specialty) => (
+                                <option key={specialty} value={specialty}>
+                                  {specialty}
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={handleAddSpecialty}
+                              disabled={!newSpecialty}
+                            >
+                              Añadir
+                            </button>
+                          </div>
+
+                          {errors.specialties && <div className="text-danger small mb-2">{errors.specialties}</div>}
+
+                          <div className="d-flex flex-wrap gap-2 mt-2">
+                            {formData.specialties.map((specialty) => (
+                              <div key={specialty} className="badge bg-light text-dark p-2 d-flex align-items-center">
+                                {specialty}
+                                <button
+                                  type="button"
+                                  className="btn-close ms-2"
+                                  style={{ fontSize: "0.5rem" }}
+                                  onClick={() => handleRemoveSpecialty(specialty)}
+                                ></button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <label htmlFor="description" className="form-label">
+                            Descripción Profesional
+                          </label>
+                          <textarea
+                            className={`form-control ${errors.description ? "is-invalid" : ""}`}
+                            id="description"
+                            name="description"
+                            rows="3"
+                            placeholder="Describe tu experiencia y lo que ofreces como guía turístico"
+                            value={formData.description}
+                            onChange={handleChange}
+                          ></textarea>
+                          {errors.description && <div className="invalid-feedback">{errors.description}</div>}
+                        </div>
+
+                        <div className="mb-4">
+                          <label htmlFor="identification" className="form-label">
+                            Número de Identificación
+                          </label>
+                          <input
+                            type="text"
+                            className={`form-control ${errors.identification ? "is-invalid" : ""}`}
+                            id="identification"
+                            name="identification"
+                            placeholder="Cédula o documento de identidad"
+                            value={formData.identification}
+                            onChange={handleChange}
+                          />
+                          {errors.identification && <div className="invalid-feedback">{errors.identification}</div>}
+                          <div className="form-text">
+                            Este dato es necesario para verificar tu identidad como guía turístico.
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+
+                    <div className="mb-4">
+                      <div className={`form-check ${errors.acceptTerms ? "is-invalid" : ""}`}>
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="acceptTerms"
+                          name="acceptTerms"
+                          checked={formData.acceptTerms}
+                          onChange={handleChange}
+                        />
+                        <label className="form-check-label" htmlFor="acceptTerms">
+                          Acepto los{" "}
+                          <a href="#" className="text-decoration-none">
+                            Términos y Condiciones
+                          </a>{" "}
+                          y{" "}
+                          <a href="#" className="text-decoration-none">
+                            Política de Privacidad
+                          </a>
+                        </label>
+                      </div>
+                      {errors.acceptTerms && <div className="text-danger small">{errors.acceptTerms}</div>}
+                    </div>
+
+                    <div className="d-flex gap-2 mb-4">
+                      <button type="button" className="btn btn-outline-secondary flex-grow-1" onClick={handlePrevStep}>
+                        Atrás
+                      </button>
+                      <button type="submit" className="btn btn-primary flex-grow-1" disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                            Registrando...
+                          </>
+                        ) : (
+                          <>Completar Registro</>
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                <div className="text-center mt-3">
+                  <p className="mb-0">
+                    ¿Ya tienes una cuenta?{" "}
+                    <Link to="/login" className="text-decoration-none">
+                      Inicia sesión
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Register
