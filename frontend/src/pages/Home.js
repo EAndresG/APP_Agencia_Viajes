@@ -172,7 +172,7 @@ const Home = () => {
                         </div>
                         <small className="text-muted">5.0 (32 reseñas)</small>
                       </div>
-                      <Link to="/articulo" className="btn btn-primary">
+                      <Link to="/PackageDetail" className="btn btn-primary">
                         Reservar ahora
                       </Link>
                     </div>

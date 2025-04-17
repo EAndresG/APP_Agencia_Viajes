@@ -204,7 +204,7 @@ const Packages = () => {
                     <p className="card-text small">{pkg.description}</p>
                   </div>
                   <div className="card-footer bg-white border-0 pt-0">
-                    <Link to={`/articulo`} className="btn btn-outline-primary w-100">
+                    <Link to={`/package/${pkg.id}`} className="btn btn-outline-primary w-100">
                       Detalles
                     </Link>
                   </div>
