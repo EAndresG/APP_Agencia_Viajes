@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Table, Badge, ProgressBar, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Card, Table, Modal, Button } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 
@@ -13,7 +13,6 @@ const ResenasPage = () => {
       fecha: "10 Abr. 2025",
       calificacion: 5,
       comentario: "Excelente experiencia, el hotel superó nuestras expectativas.",
-      estado: "Publicado",
     },
     {
       id: 2,
@@ -22,7 +21,6 @@ const ResenasPage = () => {
       fecha: "05 Abr. 2025",
       calificacion: 4,
       comentario: "Muy buen servicio, solo que la playa estaba un poco llena.",
-      estado: "Publicado",
     },
     {
       id: 3,
@@ -31,7 +29,6 @@ const ResenasPage = () => {
       fecha: "28 Mar. 2025",
       calificacion: 3,
       comentario: "Buen tour pero el guía llegó tarde.",
-      estado: "Pendiente",
     },
     {
       id: 4,
@@ -40,7 +37,6 @@ const ResenasPage = () => {
       fecha: "15 Mar. 2025",
       calificacion: 5,
       comentario: "Increíble paisaje y atención personalizada. Lo recomiendo 100%.",
-      estado: "Publicado",
     },
   ];
 
@@ -49,7 +45,22 @@ const ResenasPage = () => {
     total: 47,
     promedio: 4.3,
     publicadas: 42,
-    pendientes: 5,
+  };
+
+  // Estado para el modal
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  // Función para abrir el modal con los detalles de la reseña
+  const handleRowClick = (resena) => {
+    setSelectedReview(resena);
+    setShowModal(true);
+  };
+
+  // Función para cerrar el modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedReview(null);
   };
 
   return (
@@ -66,7 +77,7 @@ const ResenasPage = () => {
 
           {/* Estadísticas rápidas */}
           <div className="row mb-4">
-            <div className="col-md-3">
+            <div className="col-md-4">
               <Card className="shadow-sm">
                 <Card.Body className="text-center">
                   <h2 className="mb-0">{stats.total}</h2>
@@ -74,7 +85,7 @@ const ResenasPage = () => {
                 </Card.Body>
               </Card>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
               <Card className="shadow-sm">
                 <Card.Body className="text-center">
                   <h2 className="mb-0">{stats.promedio}</h2>
@@ -92,19 +103,11 @@ const ResenasPage = () => {
                 </Card.Body>
               </Card>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
               <Card className="shadow-sm">
                 <Card.Body className="text-center">
                   <h2 className="mb-0">{stats.publicadas}</h2>
                   <p className="text-muted mb-0">Publicadas</p>
-                </Card.Body>
-              </Card>
-            </div>
-            <div className="col-md-3">
-              <Card className="shadow-sm">
-                <Card.Body className="text-center">
-                  <h2 className="mb-0">{stats.pendientes}</h2>
-                  <p className="text-muted mb-0">Pendientes</p>
                 </Card.Body>
               </Card>
             </div>
@@ -124,16 +127,20 @@ const ResenasPage = () => {
                     <th>Fecha</th>
                     <th>Calificación</th>
                     <th>Comentario</th>
-                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {reseñas.map((resena) => (
-                    <tr key={resena.id}>
+                    <tr key={resena.id} onClick={() => handleRowClick(resena)} style={{ cursor: "pointer" }}>
                       <td>{resena.paquete}</td>
                       <td>{resena.cliente}</td>
                       <td>{resena.fecha}</td>
-                      <td>{resena.calificacion}</td> {/* Mostrar calificación como número */}
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-star-fill text-warning me-1"></i>
+                          <span>{resena.calificacion}</span>
+                        </div>
+                      </td>
                       <td>
                         <div
                           className="text-truncate"
@@ -143,11 +150,6 @@ const ResenasPage = () => {
                           {resena.comentario}
                         </div>
                       </td>
-                      <td>
-                        <Badge bg={resena.estado === "Publicado" ? "success" : "warning"}>
-                          {resena.estado}
-                        </Badge>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -156,6 +158,41 @@ const ResenasPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Modal para mostrar detalles de la reseña */}
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Detalles de la Reseña</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedReview && (
+            <>
+              <h5>Paquete: {selectedReview.paquete}</h5>
+              <p>
+                <strong>Cliente:</strong> {selectedReview.cliente}
+              </p>
+              <p>
+                <strong>Fecha:</strong> {selectedReview.fecha}
+              </p>
+              <p>
+                <strong>Calificación:</strong>{" "}
+                <span className="d-flex align-items-center">
+                  <i className="bi bi-star-fill text-warning me-1"></i>
+                  {selectedReview.calificacion}
+                </span>
+              </p>
+              <p>
+                <strong>Comentario:</strong> {selectedReview.comentario}
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

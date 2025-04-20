@@ -4,6 +4,8 @@ import Packages from './pages/Packages';
 import AdminPanel from './pages/AdminPanel';
 import Articulo from './pages/Articulo';
 import PackageDetail from "./pages/PackageDetail";
+import UserProfile from "./pages/UserProfile";
+import Contact from './pages/Contact';  
 
 // Páginas de autenticación
 import Register from "./pages/Auth/Register"
@@ -15,6 +17,15 @@ import GuidePanelPackages from "./pages/GuidePanel/Packages"
 import PackageForm from "./pages/GuidePanel/PackageForm"
 import Reservations from "./pages/GuidePanel/Reservations"
 import Reviews from "./pages/GuidePanel/Reviews"
+import Profiler from "./pages/GuidePanel/Profile"
+
+// Importar Bootstrap CSS y JS
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap.bundle.min.js"
+// Importar Bootstrap Icons
+import "bootstrap-icons/font/bootstrap-icons.css"
+// Importar estilos personalizados
+import "./index.css"
 
 
 function App() {
@@ -26,6 +37,9 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/Articulo" element={<Articulo />}/>
         <Route path="/PackageDetail" element={<PackageDetail />} />
+        <Route path="/userprofile" element={<UserProfile />} />
+        <Route path="/contact" element={<Contact />} />
+
 
         {/* Rutas de autenticación */}
         <Route path="/register" element={<Register />} />
@@ -38,6 +52,8 @@ function App() {
         <Route path="/guide/packages/edit/:id" element={<PackageForm />} />
         <Route path="/guide/reservations" element={<Reservations />} />
         <Route path="/guide/reviews" element={<Reviews />} />
+        <Route path="/guide/profile" element={<Profiler />} />
+
       </Routes>
     </Router>
   );

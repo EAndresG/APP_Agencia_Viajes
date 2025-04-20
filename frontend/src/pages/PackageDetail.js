@@ -364,7 +364,7 @@ const PackageDetail = () => {
                 {packageData.reviewsList && packageData.reviewsList.length > 0 ? (
                   packageData.reviewsList.map((review, index) => (
                     <div key={index} className="col-md-6">
-                      <div className="card border-0 shadow-sm">
+                      <div className="card border-0 shadow-sm h-100">
                         <div className="card-body">
                           <div className="d-flex align-items-center mb-3">
                             <img
@@ -375,11 +375,11 @@ const PackageDetail = () => {
                             />
                             <div>
                               <h6 className="mb-0">{review.userName}</h6>
-                              <small className="text-muted">{review.date}</small>
+                              <small className="text-muted">{new Date(review.date).toLocaleDateString()}</small>
                             </div>
                           </div>
                           <p className="mb-2">{review.comment}</p>
-                          <div className="d-flex">
+                          <div className="d-flex align-items-center">
                             {[...Array(review.rating)].map((_, i) => (
                               <i key={i} className="bi bi-star-fill text-warning me-1"></i>
                             ))}
@@ -397,39 +397,41 @@ const PackageDetail = () => {
               </div>
 
               {/* Formulario para agregar una nueva reseña */}
-              <div className="mt-4">
+              <div className="mt-5">
                 <h4 className="mb-3">Deja tu reseña</h4>
-                <form>
-                  <div className="mb-3">
-                    <label htmlFor="review-comment" className="form-label">
-                      Tu comentario
-                    </label>
-                    <textarea
-                      id="review-comment"
-                      className="form-control"
-                      rows="3"
-                      placeholder="Escribe tu reseña aquí..."
-                    ></textarea>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Calificación</label>
-                    <div className="d-flex align-items-center">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          className="btn btn-link p-0 text-warning"
-                          onClick={() => setRating(star)}
-                        >
-                          <i className={`bi ${star <= rating ? "bi-star-fill" : "bi-star"}`}></i>
-                        </button>
-                      ))}
+                <div className="card border-0 shadow-sm p-4">
+                  <form>
+                    <div className="mb-3">
+                      <label htmlFor="review-comment" className="form-label">
+                        Tu comentario
+                      </label>
+                      <textarea
+                        id="review-comment"
+                        className="form-control"
+                        rows="3"
+                        placeholder="Escribe tu reseña aquí..."
+                      ></textarea>
                     </div>
-                  </div>
-                  <button type="submit" className="btn btn-primary">
-                    Enviar reseña
-                  </button>
-                </form>
+                    <div className="mb-3">
+                      <label className="form-label">Calificación</label>
+                      <div className="d-flex align-items-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            className={`btn btn-link p-0 ${star <= rating ? "text-warning" : "text-muted"}`}
+                            onClick={() => setRating(star)}
+                          >
+                            <i className={`bi ${star <= rating ? "bi-star-fill" : "bi-star"}`}></i>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <button type="submit" className="btn btn-primary">
+                      Enviar reseña
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -477,7 +479,35 @@ const PackageDetail = () => {
                 </div>
 
                 <button className="btn btn-primary w-100 mb-3">Reservar ahora</button>
-                <button className="btn btn-outline-primary w-100">Consultar disponibilidad</button>
+              </div>
+            </div>
+
+            {/* Guide Information Card */}
+            <div className="card shadow-sm mb-4">
+              <div className="card-body">
+                <h5 className="card-title mb-4">Conoce a tu guía</h5>
+                <div className="d-flex align-items-center mb-3">
+                  <img
+                    src="https://via.placeholder.com/100"
+                    alt="Guía"
+                    className="rounded-circle me-3"
+                    width="80"
+                    height="80"
+                  />
+                  <div>
+                    <h6 className="mb-0">Carlos Gutiérrez</h6>
+                    <small className="text-muted">Tours culturales e históricos</small>
+                  </div>
+                </div>
+                <p className="mb-2">
+                  <i className="bi bi-geo-alt me-2 text-primary"></i> Cartagena, Colombia
+                </p>
+                <p className="mb-2">
+                  <i className="bi bi-translate me-2 text-primary"></i> Idiomas: Español, Inglés, Francés
+                </p>
+                <p className="text-muted">
+                  Guía turístico certificado con amplia experiencia en tours culturales por la ciudad amurallada de Cartagena. Apasionado por la historia y cultura local.
+                </p>
               </div>
             </div>
           </div>

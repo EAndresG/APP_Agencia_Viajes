@@ -85,7 +85,7 @@ const Home = () => {
                     <h5 className="card-title text-dark">Escapadas a la playa</h5>
                     <p className="card-text text-muted mt-2">Descubre los mejores destinos de playa para relajarte</p>
                     <div className="mt-3 text-primary">
-                      Ver articulo <i className="bi bi-arrow-right"></i>
+                      Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>
@@ -103,7 +103,7 @@ const Home = () => {
                     <h5 className="card-title text-dark">Vacaciones en grupo</h5>
                     <p className="card-text text-muted mt-2">Las mejores experiencias para disfrutar con amigos</p>
                     <div className="mt-3 text-primary">
-                      Ver articulo <i className="bi bi-arrow-right"></i>
+                      Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>
@@ -121,7 +121,7 @@ const Home = () => {
                     <h5 className="card-title text-dark">Escapadas urbanas</h5>
                     <p className="card-text text-muted mt-2">Explora las ciudades más fascinantes del mundo</p>
                     <div className="mt-3 text-primary">
-                      Ver articulo <i className="bi bi-arrow-right"></i>
+                      Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>

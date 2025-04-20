@@ -8,9 +8,10 @@ import Header from "./components/Header"
 const Packages = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const packagesPerPage = 5 // Límite de paquetes por página
 
-  // Datos de ejemplo para los paquetes
-  const packages = [
+  const [packages, setPackages] = useState([
     {
       id: 1,
       name: "Cartagena - Ciudad Amurallada",
@@ -83,7 +84,19 @@ const Packages = () => {
       created: "05 Feb, 2025",
       image: "https://v0.dev/placeholder.svg?height=100&width=150",
     },
-  ]
+    {
+      id: 7,
+      name: "Amazonas - Aventura en la Selva",
+      location: "Colombia",
+      price: 1400,
+      status: "active",
+      featured: true,
+      reservations: 20,
+      rating: 4.9,
+      created: "10 Feb, 2025",
+      image: "https://v0.dev/placeholder.svg?height=100&width=150",
+    },
+  ])
 
   // Filtrar paquetes según búsqueda y estado
   const filteredPackages = packages.filter((pkg) => {
@@ -94,6 +107,27 @@ const Packages = () => {
 
     return matchesSearch && matchesStatus
   })
+
+  // Calcular paquetes para la página actual
+  const indexOfLastPackage = currentPage * packagesPerPage
+  const indexOfFirstPackage = indexOfLastPackage - packagesPerPage
+  const currentPackages = filteredPackages.slice(indexOfFirstPackage, indexOfLastPackage)
+
+  // Calcular el número total de páginas
+  const totalPages = Math.ceil(filteredPackages.length / packagesPerPage)
+
+  // Cambiar de página
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
+
+  // Función para eliminar un paquete de la lista
+  const handleDeletePackage = (id) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este paquete?")
+    if (confirmDelete) {
+      setPackages(packages.filter((pkg) => pkg.id !== id))
+    }
+  }
 
   return (
     <div className="d-flex">
@@ -153,7 +187,7 @@ const Packages = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPackages.map((pkg) => (
+                    {currentPackages.map((pkg) => (
                       <tr key={pkg.id}>
                         <td>
                           <div className="d-flex align-items-center">
@@ -179,8 +213,8 @@ const Packages = () => {
                               pkg.status === "active"
                                 ? "bg-success"
                                 : pkg.status === "draft"
-                                  ? "bg-secondary"
-                                  : "bg-danger"
+                                ? "bg-secondary"
+                                : "bg-danger"
                             }`}
                           >
                             {pkg.status === "active" ? "Activo" : pkg.status === "draft" ? "Borrador" : "Inactivo"}
@@ -204,13 +238,16 @@ const Packages = () => {
                               <i className="bi bi-pencil"></i>
                             </Link>
                             <Link
-                              to={`/package/${pkg.id}`}
+                              to={`/guide/packages/details/${pkg.id}`} // Cambiado para redirigir a PackageDetails
                               target="_blank"
                               className="btn btn-sm btn-outline-secondary"
                             >
                               <i className="bi bi-eye"></i>
                             </Link>
-                            <button className="btn btn-sm btn-outline-danger">
+                            <button
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => handleDeletePackage(pkg.id)}
+                            >
                               <i className="bi bi-trash"></i>
                             </button>
                           </div>
@@ -225,36 +262,42 @@ const Packages = () => {
               <div className="row align-items-center">
                 <div className="col-md-6 text-md-start text-center mb-2 mb-md-0">
                   <span>
-                    Mostrando {filteredPackages.length} de {packages.length} paquetes
+                    Mostrando {currentPackages.length} de {filteredPackages.length} paquetes
                   </span>
                 </div>
                 <div className="col-md-6">
                   <nav aria-label="Page navigation">
-                    <ul className="pagination justify-content-md-end justify-content-centerr mb-0">
-                      <li className="page-item disabled">
-                        <a className="page-link" href="#" tabIndex="-1">
+                    <ul className="pagination justify-content-md-end justify-content-center mb-0">
+                      <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                        >
                           Anterior
-                        </a>
+                        </button>
                       </li>
-                      <li className="page-item active">
-                        <a className="page-link" href="#">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          3
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
+                      {Array.from({ length: totalPages }, (_, index) => (
+                        <li
+                          key={index + 1}
+                          className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(index + 1)}
+                          >
+                            {index + 1}
+                          </button>
+                        </li>
+                      ))}
+                      <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                        >
                           Siguiente
-                        </a>
+                        </button>
                       </li>
                     </ul>
                   </nav>

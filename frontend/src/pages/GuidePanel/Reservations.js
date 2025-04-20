@@ -9,9 +9,11 @@ const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
   const [dateRange, setDateRange] = useState({ start: "", end: "" })
+  const [currentPage, setCurrentPage] = useState(1)
+  const reservationsPerPage = 5 // Límite de reservas por página
 
   // Datos de ejemplo para las reservas
-  const reservations = [
+  const [reservations, setReservations] = useState([
     {
       id: 1,
       packageName: "Cartagena - Ciudad Amurallada",
@@ -22,7 +24,7 @@ const Reservations = () => {
       date: "2025-04-15",
       endDate: "2025-04-19",
       people: 2,
-      status: "confirmed",
+      status: "pending",
       amount: 1095,
       paymentMethod: "Tarjeta de crédito",
       createdAt: "2025-03-10",
@@ -49,45 +51,16 @@ const Reservations = () => {
       customerName: "Juan Pérez",
       customerEmail: "juan@example.com",
       customerPhone: "+57 320 456 7890",
-      date: "2025-05-05",
-      endDate: "2025-05-07",
-      people: 2,
+      date: "2025-05-01",
+      endDate: "2025-05-05",
+      people: 3,
       status: "confirmed",
-      amount: 800,
-      paymentMethod: "PayPal",
+      amount: 2400,
+      paymentMethod: "Efectivo",
       createdAt: "2025-03-15",
     },
-    {
-      id: 4,
-      packageName: "Santa Marta y Tayrona",
-      packageId: 4,
-      customerName: "Ana Martínez",
-      customerEmail: "ana@example.com",
-      customerPhone: "+57 315 789 0123",
-      date: "2025-05-12",
-      endDate: "2025-05-15",
-      people: 3,
-      status: "pending",
-      amount: 1450,
-      paymentMethod: "Tarjeta de crédito",
-      createdAt: "2025-03-20",
-    },
-    {
-      id: 5,
-      packageName: "Cartagena - Ciudad Amurallada",
-      packageId: 1,
-      customerName: "Pedro Gómez",
-      customerEmail: "pedro@example.com",
-      customerPhone: "+57 300 987 6543",
-      date: "2025-06-10",
-      endDate: "2025-06-14",
-      people: 2,
-      status: "cancelled",
-      amount: 1095,
-      paymentMethod: "Tarjeta de crédito",
-      createdAt: "2025-03-25",
-    },
-  ]
+    // Agrega más datos de ejemplo si es necesario
+  ])
 
   // Filtrar reservas según búsqueda, estado y fechas
   const filteredReservations = reservations.filter((reservation) => {
@@ -104,6 +77,28 @@ const Reservations = () => {
 
     return matchesSearch && matchesStatus && matchesDateRange
   })
+
+  // Calcular reservas para la página actual
+  const indexOfLastReservation = currentPage * reservationsPerPage
+  const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage
+  const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation)
+
+  // Calcular el número total de páginas
+  const totalPages = Math.ceil(filteredReservations.length / reservationsPerPage)
+
+  // Cambiar de página
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
+
+  // Función para cambiar el estado de una reserva
+  const handleChangeStatus = (id, newStatus) => {
+    setReservations((prevReservations) =>
+      prevReservations.map((reservation) =>
+        reservation.id === id ? { ...reservation, status: newStatus } : reservation
+      )
+    )
+  }
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
@@ -148,41 +143,6 @@ const Reservations = () => {
                     <option value="pending">Pendientes</option>
                     <option value="cancelled">Canceladas</option>
                   </select>
-                  <button
-                    className="btn btn-outline-primary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#filterCollapse"
-                    aria-expanded="false"
-                    aria-controls="filterCollapse"
-                  >
-                    <i className="bi bi-funnel me-1"></i> Filtros
-                  </button>
-                </div>
-              </div>
-
-              <div className="collapse mt-3" id="filterCollapse">
-                <div className="card card-body border">
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <label className="form-label">Fecha de inicio</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        value={dateRange.start}
-                        onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label">Fecha de fin</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        value={dateRange.end}
-                        onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -202,7 +162,7 @@ const Reservations = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredReservations.map((reservation) => (
+                    {currentReservations.map((reservation) => (
                       <tr key={reservation.id}>
                         <td>#{reservation.id}</td>
                         <td>
@@ -227,30 +187,32 @@ const Reservations = () => {
                               reservation.status === "confirmed"
                                 ? "bg-success"
                                 : reservation.status === "pending"
-                                  ? "bg-warning"
-                                  : "bg-danger"
+                                ? "bg-warning"
+                                : "bg-danger"
                             }`}
                           >
                             {reservation.status === "confirmed"
                               ? "Confirmada"
                               : reservation.status === "pending"
-                                ? "Pendiente"
-                                : "Cancelada"}
+                              ? "Pendiente"
+                              : "Cancelada"}
                           </span>
                         </td>
                         <td>${reservation.amount}</td>
                         <td>
                           <div className="btn-group">
-                            <Link
-                              to={`/guide/reservations/${reservation.id}`}
-                              className="btn btn-sm btn-outline-primary"
+                            <button
+                              className="btn btn-sm btn-outline-success"
+                              onClick={() => handleChangeStatus(reservation.id, "confirmed")}
+                              disabled={reservation.status === "confirmed"}
                             >
-                              <i className="bi bi-eye"></i>
-                            </Link>
-                            <button className="btn btn-sm btn-outline-secondary">
-                              <i className="bi bi-printer"></i>
+                              <i className="bi bi-check-circle"></i>
                             </button>
-                            <button className="btn btn-sm btn-outline-danger">
+                            <button
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => handleChangeStatus(reservation.id, "cancelled")}
+                              disabled={reservation.status === "cancelled"}
+                            >
                               <i className="bi bi-x-circle"></i>
                             </button>
                           </div>
@@ -265,36 +227,42 @@ const Reservations = () => {
               <div className="row align-items-center">
                 <div className="col-md-6 text-md-start text-center mb-2 mb-md-0">
                   <span>
-                    Mostrando {filteredReservations.length} de {reservations.length} reservas
+                    Mostrando {currentReservations.length} de {filteredReservations.length} reservas
                   </span>
                 </div>
                 <div className="col-md-6">
                   <nav aria-label="Page navigation">
                     <ul className="pagination justify-content-md-end justify-content-center mb-0">
-                      <li className="page-item disabled">
-                        <a className="page-link" href="#" tabIndex="-1">
+                      <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                        >
                           Anterior
-                        </a>
+                        </button>
                       </li>
-                      <li className="page-item active">
-                        <a className="page-link" href="#">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          3
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
+                      {Array.from({ length: totalPages }, (_, index) => (
+                        <li
+                          key={index + 1}
+                          className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(index + 1)}
+                          >
+                            {index + 1}
+                          </button>
+                        </li>
+                      ))}
+                      <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                        >
                           Siguiente
-                        </a>
+                        </button>
                       </li>
                     </ul>
                   </nav>

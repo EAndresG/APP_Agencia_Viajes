@@ -5,6 +5,15 @@ import { Link, useParams } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
 import Header from "./components/Header"
 
+const amenityOptions = [
+  { name: "Wi-Fi gratis", icon: "bi-wifi" },
+  { name: "Piscina", icon: "bi-water" },
+  { name: "Desayuno incluido", icon: "bi-cup-hot" },
+  { name: "Ubicación céntrica", icon: "bi-geo-alt" },
+  { name: "Cancelación gratuita", icon: "bi-shield-check" },
+  { name: "Traslados incluidos", icon: "bi-car-front" },
+];
+
 const PackageForm = () => {
   const { id } = useParams()
   const isEditing = !!id
@@ -29,12 +38,12 @@ const PackageForm = () => {
     includes: isEditing ? ["Alojamiento", "Desayunos", "Traslados", "Tour guiado"] : [],
     amenities: isEditing
       ? [
-          "Wi-Fi gratis",
-          "Piscina",
-          "Desayuno incluido",
-          "Ubicación céntrica",
-          "Cancelación gratuita",
-          "Traslados incluidos",
+          { name: "Wi-Fi gratis", icon: "bi-wifi" },
+          { name: "Piscina", icon: "bi-water" },
+          { name: "Desayuno incluido", icon: "bi-cup-hot" },
+          { name: "Ubicación céntrica", icon: "bi-geo-alt" },
+          { name: "Cancelación gratuita", icon: "bi-shield-check" },
+          { name: "Traslados incluidos", icon: "bi-car-front" },
         ]
       : [],
     tags: isEditing ? ["PLAYA", "CULTURAL", "RELAX"] : [],
@@ -55,7 +64,6 @@ const PackageForm = () => {
 
   // Estado para nuevos campos
   const [newInclude, setNewInclude] = useState("")
-  const [newAmenity, setNewAmenity] = useState("")
   const [newTag, setNewTag] = useState("")
 
   // Manejadores de eventos
@@ -86,24 +94,23 @@ const PackageForm = () => {
     })
   }
 
-  const handleAddAmenity = () => {
-    if (newAmenity.trim()) {
+  const handleAddAmenity = (selectedAmenity) => {
+    if (!formData.amenities.some((amenity) => amenity.name === selectedAmenity.name)) {
       setFormData({
         ...formData,
-        amenities: [...formData.amenities, newAmenity.trim()],
-      })
-      setNewAmenity("")
+        amenities: [...formData.amenities, selectedAmenity],
+      });
     }
-  }
+  };
 
   const handleRemoveAmenity = (index) => {
-    const newAmenities = [...formData.amenities]
-    newAmenities.splice(index, 1)
+    const newAmenities = [...formData.amenities];
+    newAmenities.splice(index, 1);
     setFormData({
       ...formData,
       amenities: newAmenities,
-    })
-  }
+    });
+  };
 
   const handleAddTag = () => {
     if (newTag.trim()) {
@@ -156,13 +163,56 @@ const PackageForm = () => {
     setImages(newImages)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Aquí iría la lógica para enviar los datos al backend
-    console.log("Formulario enviado:", { ...formData, images })
-    // Redireccionar a la lista de paquetes
-    // history.push("/guide/packages")
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Datos a enviar al backend
+    const packageData = {
+      name: formData.name,
+      location: formData.location,
+      price: formData.price,
+      capacity: formData.capacity,
+      duration: formData.duration,
+      description: formData.description,
+      longDescription: formData.longDescription,
+      itinerary: formData.itinerary,
+      includes: formData.includes,
+      amenities: formData.amenities.map((amenity) => amenity.name),
+      tags: formData.tags,
+      status: formData.status, // Estado del paquete
+      images: images.map((img) => img.file || img.url), // Enviar URLs o archivos
+    };
+
+    try {
+      if (isEditing) {
+        // Actualizar paquete existente
+        await fetch(`/api/packages/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(packageData),
+        });
+        alert("Paquete actualizado correctamente.");
+      } else {
+        // Crear nuevo paquete
+        await fetch("/api/packages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(packageData),
+        });
+        alert("Paquete creado correctamente.");
+      }
+
+      // Redirigir a la lista de paquetes
+      window.location.href = "/guide/packages";
+    } catch (error) {
+      console.error("Error al guardar el paquete:", error);
+      alert("Ocurrió un error al guardar el paquete.");
+    }
+  };
 
   return (
     <div className="d-flex">
@@ -374,24 +424,33 @@ const PackageForm = () => {
                     </div>
 
                     <div className="mb-4">
-                      <label className="form-label">Amenidades</label>
+                      <label className="form-label">Seleccionar Amenidades</label>
                       <div className="input-group mb-2">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Añadir amenidad"
-                          value={newAmenity}
-                          onChange={(e) => setNewAmenity(e.target.value)}
-                          onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddAmenity())}
-                        />
-                        <button type="button" className="btn btn-primary" onClick={handleAddAmenity}>
-                          Añadir
-                        </button>
+                        <select
+                          className="form-select"
+                          onChange={(e) => {
+                            const selectedAmenity = amenityOptions.find(
+                              (option) => option.name === e.target.value
+                            );
+                            if (selectedAmenity) handleAddAmenity(selectedAmenity);
+                          }}
+                        >
+                          <option value="">Selecciona una amenidad</option>
+                          {amenityOptions.map((option, index) => (
+                            <option key={index} value={option.name}>
+                              {option.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="d-flex flex-wrap gap-2 mt-2">
-                        {formData.amenities.map((item, index) => (
-                          <div key={index} className="badge bg-light text-dark p-2 d-flex align-items-center">
-                            {item}
+                        {formData.amenities.map((amenity, index) => (
+                          <div
+                            key={index}
+                            className="badge bg-light text-dark p-2 d-flex align-items-center"
+                          >
+                            <i className={`bi ${amenity.icon} me-2`}></i>
+                            {amenity.name}
                             <button
                               type="button"
                               className="btn-close ms-2"
@@ -523,21 +582,6 @@ const PackageForm = () => {
                         <option value="active">Publicado</option>
                         <option value="inactive">Inactivo</option>
                       </select>
-                    </div>
-
-                    <div className="form-check form-switch mb-4">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="featured"
-                        name="featured"
-                        checked={formData.featured}
-                        onChange={handleChange}
-                      />
-                      <label className="form-check-label" htmlFor="featured">
-                        Destacar paquete
-                      </label>
-                      <div className="form-text">Los paquetes destacados aparecen en la página principal.</div>
                     </div>
 
                     <div className="d-grid gap-2">
