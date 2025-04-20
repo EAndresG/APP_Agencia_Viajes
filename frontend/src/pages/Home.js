@@ -78,21 +78,21 @@ const Home = () => {
           <h2 className="text-center mb-5 display-6">Descubre ideas para tus vacaciones</h2>
           <div className="row g-4">
             <div className="col-md-4">
-              <Link to="/packages" className="text-decoration-none">
+              <Link to="/articulo" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
                   <img src="https://v0.dev/placeholder.svg?height=200&width=400" className="card-img-top" alt="Playa" />
                   <div className="card-body text-center p-4">
                     <h5 className="card-title text-dark">Escapadas a la playa</h5>
                     <p className="card-text text-muted mt-2">Descubre los mejores destinos de playa para relajarte</p>
                     <div className="mt-3 text-primary">
-                      Ver paquetes <i className="bi bi-arrow-right"></i>
+                      Ver articulo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>
               </Link>
             </div>
             <div className="col-md-4">
-              <Link to="/packages" className="text-decoration-none">
+              <Link to="/articulo" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
                   <img
                     src="https://v0.dev/placeholder.svg?height=200&width=400"
@@ -103,14 +103,14 @@ const Home = () => {
                     <h5 className="card-title text-dark">Vacaciones en grupo</h5>
                     <p className="card-text text-muted mt-2">Las mejores experiencias para disfrutar con amigos</p>
                     <div className="mt-3 text-primary">
-                      Ver paquetes <i className="bi bi-arrow-right"></i>
+                      Ver articulo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>
               </Link>
             </div>
             <div className="col-md-4">
-              <Link to="/packages" className="text-decoration-none">
+              <Link to="/articulo" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
                   <img
                     src="https://v0.dev/placeholder.svg?height=200&width=400"
@@ -121,7 +121,7 @@ const Home = () => {
                     <h5 className="card-title text-dark">Escapadas urbanas</h5>
                     <p className="card-text text-muted mt-2">Explora las ciudades más fascinantes del mundo</p>
                     <div className="mt-3 text-primary">
-                      Ver paquetes <i className="bi bi-arrow-right"></i>
+                      Ver articulo <i className="bi bi-arrow-right"></i>
                     </div>
                   </div>
                 </div>
@@ -134,7 +134,7 @@ const Home = () => {
       {/* Recent Locations */}
       <section className="py-5 bg-light">
         <div className="container">
-          <h2 className="text-center mb-5 display-6">Destinos recientes</h2>
+          <h2 className="text-center mb-5 display-6">Paquetes de viajes</h2>
           <div className="row g-4">
             <div className="col-lg-6">
               <div className="card border-0 shadow-sm mb-4">

@@ -9,6 +9,7 @@ const PackageDetail = () => {
   const { id } = useParams()
   const [activeTab, setActiveTab] = useState("description")
   const [activeImage, setActiveImage] = useState(0)
+  const [rating, setRating] = useState(0)
 
   // Datos de ejemplo para el paquete actual
   const packageData = {
@@ -94,6 +95,22 @@ const PackageDetail = () => {
       response: "98%",
       responseTime: "en menos de una hora",
     },
+    reviewsList: [
+      {
+        userName: "Juan Pérez",
+        userImage: "https://v0.dev/placeholder.svg?height=50&width=50",
+        date: "2023-08-01",
+        comment: "Excelente experiencia, muy recomendado.",
+        rating: 5,
+      },
+      {
+        userName: "Ana Gómez",
+        userImage: "https://v0.dev/placeholder.svg?height=50&width=50",
+        date: "2023-07-15",
+        comment: "Todo estuvo perfecto, volvería a contratar.",
+        rating: 4,
+      },
+    ],
   }
 
   // Datos de ejemplo para paquetes recomendados
@@ -338,6 +355,83 @@ const PackageDetail = () => {
                 {activeTab === "policies" && <div dangerouslySetInnerHTML={{ __html: packageData.policies }}></div>}
               </div>
             </div>
+
+            {/* Reviews Section */}
+            <div className="mt-5">
+              <h3 className="mb-4">Reseñas</h3>
+              <div className="row g-4">
+                {/* Mostrar reseñas existentes */}
+                {packageData.reviewsList && packageData.reviewsList.length > 0 ? (
+                  packageData.reviewsList.map((review, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card border-0 shadow-sm">
+                        <div className="card-body">
+                          <div className="d-flex align-items-center mb-3">
+                            <img
+                              src={review.userImage || "/placeholder.svg"}
+                              alt={review.userName}
+                              className="rounded-circle me-3"
+                              style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                            />
+                            <div>
+                              <h6 className="mb-0">{review.userName}</h6>
+                              <small className="text-muted">{review.date}</small>
+                            </div>
+                          </div>
+                          <p className="mb-2">{review.comment}</p>
+                          <div className="d-flex">
+                            {[...Array(review.rating)].map((_, i) => (
+                              <i key={i} className="bi bi-star-fill text-warning me-1"></i>
+                            ))}
+                            {[...Array(5 - review.rating)].map((_, i) => (
+                              <i key={i} className="bi bi-star text-muted me-1"></i>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted">No hay reseñas aún. Sé el primero en dejar una reseña.</p>
+                )}
+              </div>
+
+              {/* Formulario para agregar una nueva reseña */}
+              <div className="mt-4">
+                <h4 className="mb-3">Deja tu reseña</h4>
+                <form>
+                  <div className="mb-3">
+                    <label htmlFor="review-comment" className="form-label">
+                      Tu comentario
+                    </label>
+                    <textarea
+                      id="review-comment"
+                      className="form-control"
+                      rows="3"
+                      placeholder="Escribe tu reseña aquí..."
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Calificación</label>
+                    <div className="d-flex align-items-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          className="btn btn-link p-0 text-warning"
+                          onClick={() => setRating(star)}
+                        >
+                          <i className={`bi ${star <= rating ? "bi-star-fill" : "bi-star"}`}></i>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button type="submit" className="btn btn-primary">
+                    Enviar reseña
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
 
           <div className="col-lg-4">
@@ -386,45 +480,6 @@ const PackageDetail = () => {
                 <button className="btn btn-outline-primary w-100">Consultar disponibilidad</button>
               </div>
             </div>
-
-            {/* Host Info */}
-            <div className="card shadow-sm mb-4">
-              <div className="card-body">
-                <h5 className="card-title mb-3">Ofrecido por</h5>
-                <div className="d-flex align-items-center mb-3">
-                  <img
-                    src={packageData.host.image || "/placeholder.svg"}
-                    alt={packageData.host.name}
-                    className="rounded-circle me-3"
-                    width="50"
-                    height="50"
-                  />
-                  <div>
-                    <h6 className="mb-0">{packageData.host.name}</h6>
-                    <div className="d-flex align-items-center">
-                      <i className="bi bi-star-fill text-warning me-1"></i>
-                      <span className="me-1">{packageData.host.rating}</span>
-                      <span className="text-muted">({packageData.host.reviews} reseñas)</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-check-circle-fill text-success me-2"></i>
-                  <div>
-                    <div className="small">Identidad verificada</div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-reply-fill text-primary me-2"></i>
-                  <div>
-                    <div className="small">
-                      Tasa de respuesta: {packageData.host.response} {packageData.host.responseTime}
-                    </div>
-                  </div>
-                </div>
-                <button className="btn btn-outline-primary w-100 mt-3">Contactar agencia</button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -470,7 +525,7 @@ const PackageDetail = () => {
           </div>
         </div>
       </div>
-
+      
       <Footer />
     </>
   )

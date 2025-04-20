@@ -72,15 +72,6 @@ const Sidebar = () => {
           </li>
           <li className="nav-item">
             <Link
-              to="/guide/analytics"
-              className={`nav-link px-3 py-2 ${isActive("/guide/analytics") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-graph-up me-2"></i>
-              Analíticas
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
               to="/guide/profile"
               className={`nav-link px-3 py-2 ${isActive("/guide/profile") ? "active bg-primary bg-opacity-25" : "text-white"}`}
             >

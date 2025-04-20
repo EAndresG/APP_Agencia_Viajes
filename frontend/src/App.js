@@ -14,6 +14,7 @@ import Dashboard from "./pages/GuidePanel/Dashboard"
 import GuidePanelPackages from "./pages/GuidePanel/Packages"
 import PackageForm from "./pages/GuidePanel/PackageForm"
 import Reservations from "./pages/GuidePanel/Reservations"
+import Reviews from "./pages/GuidePanel/Reviews"
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/guide/packages/create" element={<PackageForm />} />
         <Route path="/guide/packages/edit/:id" element={<PackageForm />} />
         <Route path="/guide/reservations" element={<Reservations />} />
+        <Route path="/guide/reviews" element={<Reviews />} />
       </Routes>
     </Router>
   );
