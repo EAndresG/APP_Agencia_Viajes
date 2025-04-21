@@ -14,7 +14,7 @@ const PerfilPage = () => {
     idiomas: ["Español", "Inglés", "Francés"],
     biografia:
       "Guía turístico certificado con amplia experiencia en tours culturales por la ciudad amurallada de Cartagena. Apasionado por la historia y cultura local.",
-    foto: "https://via.placeholder.com/150",
+    foto: "", // Imagen vacía por defecto
   };
 
   // Estados para manejar los datos editables
@@ -23,6 +23,8 @@ const PerfilPage = () => {
   const [telefono, setTelefono] = useState(guia.telefono);
   const [idiomas, setIdiomas] = useState(guia.idiomas);
   const [biografia, setBiografia] = useState(guia.biografia);
+  const [foto, setFoto] = useState(guia.foto || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"); // Imagen por defecto
+  const [hover, setHover] = useState(false); // Estado para controlar el hover
 
   const handleAddIdioma = (e) => {
     e.preventDefault();
@@ -39,8 +41,19 @@ const PerfilPage = () => {
 
   const handleSaveChanges = () => {
     // Aquí puedes enviar los datos actualizados al backend
-    console.log("Datos guardados:", { especialidad, ubicacion, telefono, idiomas, biografia });
+    console.log("Datos guardados:", { especialidad, ubicacion, telefono, idiomas, biografia, foto });
     alert("Cambios guardados correctamente.");
+  };
+
+  const handleUploadPhoto = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFoto(reader.result); // Actualiza la foto con la imagen cargada
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -57,14 +70,36 @@ const PerfilPage = () => {
             {/* Información del perfil */}
             <Col md={4}>
               <Card className="shadow-sm mb-4">
-                <Card.Body className="text-center">
-                  <img
-                    src={guia.foto}
-                    alt="Foto de perfil"
-                    className="rounded-circle mb-3"
-                    width="150"
-                    height="150"
-                  />
+                <Card.Body className="text-center position-relative">
+                  <div
+                    className="position-relative d-inline-block"
+                    onMouseEnter={() => setHover(true)} // Mostrar el lápiz al pasar el mouse
+                    onMouseLeave={() => setHover(false)} // Ocultar el lápiz al salir del mouse
+                  >
+                    <img
+                      src={foto}
+                      alt="Foto de perfil"
+                      className="rounded-circle mb-3"
+                      width="150"
+                      height="150"
+                    />
+                    {hover && ( // Mostrar el lápiz solo cuando el mouse está encima
+                      <label
+                        htmlFor="upload-photo"
+                        className="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2"
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </label>
+                    )}
+                    <input
+                      type="file"
+                      id="upload-photo"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleUploadPhoto}
+                    />
+                  </div>
                   <h3>{guia.nombre}</h3>
                   <p className="text-muted">{especialidad}</p>
 

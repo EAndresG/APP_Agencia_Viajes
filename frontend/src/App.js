@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Packages from './pages/Packages';
-import AdminPanel from './pages/AdminPanel';
 import Articulo from './pages/Articulo';
 import PackageDetail from "./pages/PackageDetail";
 import UserProfile from "./pages/UserProfile";
@@ -11,13 +10,23 @@ import Contact from './pages/Contact';
 import Register from "./pages/Auth/Register"
 import Login from './pages/Auth/Login';
 
-// Panel del Guía
+// Panel del Guía turístico
 import Dashboard from "./pages/GuidePanel/Dashboard"
 import GuidePanelPackages from "./pages/GuidePanel/Packages"
 import PackageForm from "./pages/GuidePanel/PackageForm"
 import Reservations from "./pages/GuidePanel/Reservations"
 import Reviews from "./pages/GuidePanel/Reviews"
 import Profiler from "./pages/GuidePanel/Profile"
+
+//Panel del administrador
+import AdminDashboard from "./pages/AdminPanel/AdminDashboard"
+import AdminPackages from "./pages/AdminPanel/AdminPackages"
+import AdminReservations from "./pages/AdminPanel/AdminReservations"
+import AdminReviews from "./pages/AdminPanel/AdminReviews"
+import AdminProfile from "./pages/AdminPanel/AdminProfile"
+import AdminPackageForm from "./pages/AdminPanel/AdminPackageForm"
+import ManageUsers from './pages/AdminPanel/ManageUsers';
+
 
 // Importar Bootstrap CSS y JS
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -34,7 +43,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/packages" element={<Packages />} />
-        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/Articulo" element={<Articulo />}/>
         <Route path="/PackageDetail" element={<PackageDetail />} />
         <Route path="/userprofile" element={<UserProfile />} />
@@ -54,6 +62,17 @@ function App() {
         <Route path="/guide/reviews" element={<Reviews />} />
         <Route path="/guide/profile" element={<Profiler />} />
 
+        {/* Rutas del panel de administrador */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/packages" element={<AdminPackages />} />
+        <Route path="/admin/packageForm/create" element={<AdminPackageForm />} />
+        <Route path="/admin/packages/edit/:id" element={<AdminPackageForm />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route path="/admin/reservations" element={<AdminReservations />} />
+        <Route path="/admin/reviews" element={<AdminReviews />} />
+        <Route path="/admin/manage-users" element={<ManageUsers />} />
+
+        {/* Rutas de error */}
       </Routes>
     </Router>
   );

@@ -1,15 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import Navbar from "../components/Navbar/Navbar"
-import Footer from "../components/Footer/Footer"
+import { useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 
 const PackageDetail = () => {
-  const { id } = useParams()
-  const [activeTab, setActiveTab] = useState("description")
-  const [activeImage, setActiveImage] = useState(0)
-  const [rating, setRating] = useState(0)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("description");
+  const [activeImage, setActiveImage] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [showSummary, setShowSummary] = useState(false); // Estado para mostrar la tarjeta flotante de reserva
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false); // Estado para mostrar la tarjeta flotante de inicio de sesión
+
+  // Simulación de usuario autenticado
+  const isAuthenticated = false; // Cambiar a `true` si el usuario está autenticado
 
   // Datos de ejemplo para el paquete actual
   const packageData = {
@@ -111,7 +117,7 @@ const PackageDetail = () => {
         rating: 4,
       },
     ],
-  }
+  };
 
   // Datos de ejemplo para paquetes recomendados
   const recommendedPackages = [
@@ -145,7 +151,31 @@ const PackageDetail = () => {
       reviews: 36,
       duration: "3 días / 2 noches",
     },
-  ]
+  ];
+
+  const handleReserve = () => {
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true); // Mostrar tarjeta flotante si no está autenticado
+    } else {
+      setShowSummary(true); // Mostrar resumen de reserva si está autenticado
+    }
+  };
+
+  const handleLeaveReview = () => {
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true); // Mostrar tarjeta flotante si no está autenticado
+    } else {
+      alert("Formulario para dejar una reseña"); // Aquí iría la lógica para dejar una reseña
+    }
+  };
+
+  const handleCloseLoginPrompt = () => {
+    setShowLoginPrompt(false); // Ocultar tarjeta flotante
+  };
+
+  const handleCloseSummary = () => {
+    setShowSummary(false); // Ocultar la tarjeta flotante de reserva
+  };
 
   return (
     <>
@@ -427,7 +457,7 @@ const PackageDetail = () => {
                         ))}
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-primary">
+                    <button type="button" className="btn btn-primary" onClick={handleLeaveReview}>
                       Enviar reseña
                     </button>
                   </form>
@@ -478,7 +508,9 @@ const PackageDetail = () => {
                   </div>
                 </div>
 
-                <button className="btn btn-primary w-100 mb-3">Reservar ahora</button>
+                <button className="btn btn-primary w-100 mb-3" onClick={handleReserve}>
+                  Reservar ahora
+                </button>
               </div>
             </div>
 
@@ -555,10 +587,63 @@ const PackageDetail = () => {
           </div>
         </div>
       </div>
-      
+
+      {/* Tarjeta flotante de resumen */}
+      {showSummary && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1050 }}
+        >
+          <div className="card shadow-lg" style={{ width: "400px" }}>
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Resumen de la Reserva</h5>
+              <button className="btn-close" onClick={handleCloseSummary}></button>
+            </div>
+            <div className="card-body">
+              <p><strong>Paquete:</strong> {packageData.name}</p>
+              <p><strong>Ubicación:</strong> {packageData.location}</p>
+              <p><strong>Precio:</strong> ${packageData.price} por persona</p>
+              <p><strong>Duración:</strong> {packageData.duration}</p>
+              <p><strong>Capacidad:</strong> {packageData.capacity}</p>
+            </div>
+            <div className="card-footer d-flex justify-content-end">
+              <button className="btn btn-primary" onClick={handleCloseSummary}>
+                Confirmar Reserva
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tarjeta flotante de inicio de sesión */}
+      {showLoginPrompt && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1050 }}
+        >
+          <div className="card shadow-lg" style={{ width: "400px" }}>
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Inicia sesión</h5>
+              <button className="btn-close" onClick={handleCloseLoginPrompt}></button>
+            </div>
+            <div className="card-body">
+              <p>Debes iniciar sesión para realizar esta acción.</p>
+            </div>
+            <div className="card-footer d-flex justify-content-end">
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/login")}
+              >
+                Ir a Iniciar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default PackageDetail
+export default PackageDetail;

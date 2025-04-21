@@ -54,7 +54,7 @@ const UserProfile = () => {
             <Card className="shadow-sm mb-4">
               <Card.Body className="text-center">
                 <img
-                  src="https://via.placeholder.com/150"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
                   alt="Foto de perfil"
                   className="rounded-circle mb-3"
                   width="150"
