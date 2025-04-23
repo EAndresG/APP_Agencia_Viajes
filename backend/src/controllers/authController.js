@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
       expiresIn: '1d',
     });
 
-    res.status(200).json({ message: 'Inicio de sesión exitoso', token });
+    res.status(200).json({ message: 'Inicio de sesión exitoso', token, userType: user.userType });
   } catch (error) {
     res.status(500).json({ message: 'Error al iniciar sesión', error });
   }

@@ -1,75 +1,95 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import "./Auth.css"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../apiConfig"; // Importar la URL base del backend
+import "./Auth.css";
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [userType, setUserType] = useState("user") // "user" o "guide"
+  const navigate = useNavigate();
+  const [userType, setUserType] = useState("user"); // "user" o "guide"
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
-  const [errors, setErrors] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
-    })
+    });
     // Limpiar error cuando el usuario comienza a escribir
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: "",
-      })
+      });
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
     // Validar email
     if (!formData.email) {
-      newErrors.email = "El correo electrónico es obligatorio"
+      newErrors.email = "El correo electrónico es obligatorio";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "El correo electrónico no es válido"
+      newErrors.email = "El correo electrónico no es válido";
     }
 
     // Validar contraseña
     if (!formData.password) {
-      newErrors.password = "La contraseña es obligatoria"
+      newErrors.password = "La contraseña es obligatoria";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (validateForm()) {
-      setIsLoading(true)
+      setIsLoading(true);
 
-      // Simulación de inicio de sesión (reemplazar con llamada real a API)
-      setTimeout(() => {
-        setIsLoading(false)
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
 
-        // Redireccionar según el tipo de usuario
-        if (userType === "guide") {
-          navigate("/guide/dashboard")
+        const data = await response.json();
+
+        if (response.ok) {
+          // Guardar el token en localStorage o en un estado global
+          localStorage.setItem("token", data.token);
+
+          // Redirigir según el tipo de usuario
+          if (data.userType === "guide") {
+            navigate("/guide/dashboard");
+          } else {
+            navigate("/");
+          }
         } else {
-          navigate("/")
+          alert(data.message || "Error al iniciar sesión.");
         }
-
-        // Aquí se guardaría el token y la información del usuario en localStorage o en un estado global
-        console.log("Inicio de sesión exitoso como:", userType, formData)
-      }, 1500)
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        alert("Ocurrió un error al iniciar sesión.");
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
+  };
 
   return (
     <div className="auth-page">
@@ -150,14 +170,9 @@ const Login = () => {
                 </div>
 
                 <div className="mb-4">
-                  <div className="d-flex justify-content-between align-items-center mb-1">
-                    <label htmlFor="password" className="form-label mb-0">
-                      Contraseña
-                    </label>
-                    <Link to="/forgot-password" className="text-decoration-none small">
-                      ¿Olvidaste tu contraseña?
-                    </Link>
-                  </div>
+                  <label htmlFor="password" className="form-label">
+                    Contraseña
+                  </label>
                   <div className="input-group">
                     <span className="input-group-text bg-white border-end-0">
                       <i className="bi bi-lock"></i>
@@ -172,15 +187,6 @@ const Login = () => {
                       onChange={handleChange}
                     />
                     {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" id="rememberMe" />
-                    <label className="form-check-label" htmlFor="rememberMe">
-                      Recordar mi sesión
-                    </label>
                   </div>
                 </div>
 
@@ -223,7 +229,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
