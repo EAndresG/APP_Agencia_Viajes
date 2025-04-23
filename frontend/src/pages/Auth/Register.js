@@ -16,25 +16,12 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     phone: "",
-    experience: "",
-    specialties: [],
     description: "",
     identification: "",
     acceptTerms: false,
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [newSpecialty, setNewSpecialty] = useState("");
-
-  const availableSpecialties = [
-    "Ecoturismo",
-    "Turismo Cultural",
-    "Turismo de Aventura",
-    "Turismo Gastronómico",
-    "Turismo de Playa",
-    "Turismo Urbano",
-    "Turismo Rural",
-  ];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,23 +35,6 @@ const Register = () => {
         [name]: "",
       });
     }
-  };
-
-  const handleAddSpecialty = () => {
-    if (newSpecialty && !formData.specialties.includes(newSpecialty)) {
-      setFormData({
-        ...formData,
-        specialties: [...formData.specialties, newSpecialty],
-      });
-      setNewSpecialty("");
-    }
-  };
-
-  const handleRemoveSpecialty = (specialty) => {
-    setFormData({
-      ...formData,
-      specialties: formData.specialties.filter((s) => s !== specialty),
-    });
   };
 
   const validateStep1 = () => {
@@ -85,8 +55,6 @@ const Register = () => {
   const validateStep2 = () => {
     const newErrors = {};
     if (userType === "guide") {
-      if (!formData.experience) newErrors.experience = "La experiencia es obligatoria";
-      if (formData.specialties.length === 0) newErrors.specialties = "Debes seleccionar al menos una especialidad";
       if (!formData.description.trim()) newErrors.description = "La descripción es obligatoria";
       if (!formData.identification.trim()) newErrors.identification = "El número de identificación es obligatorio";
     }
@@ -131,7 +99,6 @@ const Register = () => {
             acceptTerms: formData.acceptTerms,
             ...(userType === "guide" && {
               experience: formData.experience,
-              specialties: JSON.stringify(formData.specialties), // Convertir a JSON
               description: formData.description,
               identification: formData.identification,
             }),
@@ -139,14 +106,6 @@ const Register = () => {
         });
 
         const data = await response.json();
-
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !userType || !formData.acceptTerms) {
-          return res.status(400).json({ message: 'Todos los campos obligatorios deben ser completados.' });
-        }
-
-        if (userType === 'guide' && (!formData.experience || !formData.specialties || !formData.description || !formData.identification)) {
-          return res.status(400).json({ message: 'Todos los campos para guías deben ser completados.' });
-        }
 
         if (response.ok) {
           alert("Registro exitoso. Ahora puedes iniciar sesión.");
@@ -370,69 +329,6 @@ const Register = () => {
                     {userType === "guide" ? (
                       // Campos adicionales para guías
                       <>
-                        <div className="mb-3">
-                          <label htmlFor="experience" className="form-label">
-                            Años de Experiencia
-                          </label>
-                          <select
-                            className={`form-select ${errors.experience ? "is-invalid" : ""}`}
-                            id="experience"
-                            name="experience"
-                            value={formData.experience}
-                            onChange={handleChange}
-                          >
-                            <option value="">Selecciona una opción</option>
-                            <option value="0-1">Menos de 1 año</option>
-                            <option value="1-3">1-3 años</option>
-                            <option value="3-5">3-5 años</option>
-                            <option value="5-10">5-10 años</option>
-                            <option value="10+">Más de 10 años</option>
-                          </select>
-                          {errors.experience && <div className="invalid-feedback">{errors.experience}</div>}
-                        </div>
-
-                        <div className="mb-3">
-                          <label className="form-label">Especialidades</label>
-                          <div className="input-group mb-2">
-                            <select
-                              className="form-select"
-                              value={newSpecialty}
-                              onChange={(e) => setNewSpecialty(e.target.value)}
-                            >
-                              <option value="">Selecciona especialidad</option>
-                              {availableSpecialties.map((specialty) => (
-                                <option key={specialty} value={specialty}>
-                                  {specialty}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={handleAddSpecialty}
-                              disabled={!newSpecialty}
-                            >
-                              Añadir
-                            </button>
-                          </div>
-
-                          {errors.specialties && <div className="text-danger small mb-2">{errors.specialties}</div>}
-
-                          <div className="d-flex flex-wrap gap-2 mt-2">
-                            {formData.specialties.map((specialty) => (
-                              <div key={specialty} className="badge bg-light text-dark p-2 d-flex align-items-center">
-                                {specialty}
-                                <button
-                                  type="button"
-                                  className="btn-close ms-2"
-                                  style={{ fontSize: "0.5rem" }}
-                                  onClick={() => handleRemoveSpecialty(specialty)}
-                                ></button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
                         <div className="mb-3">
                           <label htmlFor="description" className="form-label">
                             Descripción Profesional

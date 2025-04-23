@@ -31,8 +31,6 @@ exports.register = async (req, res) => {
     if (userType === 'guide') {
       await Guide.create({
         userId: newUser.id,
-        experience,
-        specialties,
         description,
         identification,
       });
@@ -40,7 +38,8 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
   } catch (error) {
-    res.status(500).json({ message: 'Error al registrar usuario', error });
+    console.error("Error al registrar usuario:", error);
+    res.status(500).json({ message: "Error al registrar usuario", error: error.message });
   }
 };
 
