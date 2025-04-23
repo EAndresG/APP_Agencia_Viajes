@@ -1,24 +1,42 @@
 const User = require('../models/User');
+const Guide = require('../models/Guide');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, phone, userType, acceptTerms, experience, specialties, description, identification } = req.body;
 
+    // Verificar si el correo ya está registrado
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'El correo ya está registrado' });
     }
 
+    // Encriptar la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Crear el usuario
     const newUser = await User.create({
       firstName,
       lastName,
       email,
       password: hashedPassword,
+      phone,
+      userType,
+      acceptTerms,
     });
+
+    // Si es guía, crear el registro en la tabla `guides`
+    if (userType === 'guide') {
+      await Guide.create({
+        userId: newUser.id,
+        experience,
+        specialties,
+        description,
+        identification,
+      });
+    }
 
     res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
   } catch (error) {

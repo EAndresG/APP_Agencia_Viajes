@@ -131,7 +131,7 @@ const Register = () => {
             acceptTerms: formData.acceptTerms,
             ...(userType === "guide" && {
               experience: formData.experience,
-              specialties: formData.specialties,
+              specialties: JSON.stringify(formData.specialties), // Convertir a JSON
               description: formData.description,
               identification: formData.identification,
             }),
@@ -139,6 +139,14 @@ const Register = () => {
         });
 
         const data = await response.json();
+
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !userType || !formData.acceptTerms) {
+          return res.status(400).json({ message: 'Todos los campos obligatorios deben ser completados.' });
+        }
+
+        if (userType === 'guide' && (!formData.experience || !formData.specialties || !formData.description || !formData.identification)) {
+          return res.status(400).json({ message: 'Todos los campos para guías deben ser completados.' });
+        }
 
         if (response.ok) {
           alert("Registro exitoso. Ahora puedes iniciar sesión.");
