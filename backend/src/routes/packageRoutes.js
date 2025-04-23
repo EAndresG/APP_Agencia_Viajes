@@ -1,13 +1,13 @@
 const express = require('express');
-const { getPackages, getPackageById, createPackage, updatePackage, deletePackage } = require('../controllers/packageController');
-const { verifyToken } = require('../middlewares/authMiddleware');
+const { createPackage, getPackages, getPackageById, updatePackage, deletePackage } = require('../controllers/packageController');
+const verifyToken = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.get('/', getPackages); // Obtener todos los paquetes
-router.get('/:id', getPackageById); // Obtener un paquete por ID
-router.post('/', verifyToken, createPackage); // Crear un nuevo paquete
-router.put('/:id', verifyToken, updatePackage); // Actualizar un paquete
-router.delete('/:id', verifyToken, deletePackage); // Eliminar un paquete
+router.post('/', verifyToken, createPackage); // Ruta para crear un paquete
+router.get('/', verifyToken, getPackages); // Ruta para obtener todos los paquetes
+router.get('/:id', verifyToken, getPackageById); // Ruta para obtener un paquete por ID
+router.put('/:id', verifyToken, updatePackage); // Ruta para actualizar un paquete
+router.delete('/:id', verifyToken, deletePackage); // Ruta para eliminar un paquete
 
 module.exports = router;

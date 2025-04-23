@@ -23,6 +23,12 @@ sequelize
 const authRoutes = require("./src/routes/authRoutes");
 app.use("/api/auth", authRoutes);
 
+const userRoutes = require('./src/routes/userRoutes');
+app.use('/api/users', userRoutes); // Registrar las rutas de usuarios
+
+const packageRoutes = require('./src/routes/packageRoutes');
+app.use('/api/packages', packageRoutes); // Registrar las rutas de paquetes
+
 // Iniciar servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));

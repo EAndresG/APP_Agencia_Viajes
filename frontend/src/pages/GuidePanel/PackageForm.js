@@ -1,216 +1,164 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import Header from "./components/Header"
-
-const amenityOptions = [
-  { name: "Wi-Fi gratis", icon: "bi-wifi" },
-  { name: "Piscina", icon: "bi-water" },
-  { name: "Desayuno incluido", icon: "bi-cup-hot" },
-  { name: "Ubicación céntrica", icon: "bi-geo-alt" },
-  { name: "Cancelación gratuita", icon: "bi-shield-check" },
-  { name: "Traslados incluidos", icon: "bi-car-front" },
-];
+import { useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import API_BASE_URL from "../../apiConfig"; // Asegúrate de que esta URL esté configurada correctamente
 
 const PackageForm = () => {
-  const { id } = useParams()
-  const isEditing = !!id
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditing = !!id;
 
   // Estado para el formulario
   const [formData, setFormData] = useState({
-    name: isEditing ? "Cartagena - Ciudad Amurallada" : "",
-    location: isEditing ? "Colombia" : "",
-    price: isEditing ? "1095" : "",
-    capacity: isEditing ? "2-4" : "",
-    duration: isEditing ? "5" : "",
-    nights: isEditing ? "4" : "",
-    description: isEditing
-      ? "Disfruta de una experiencia inolvidable en la hermosa ciudad de Cartagena. Este paquete incluye alojamiento en un hotel boutique ubicado en el corazón de la Ciudad Amurallada, a pocos pasos de los principales atractivos turísticos."
-      : "",
-    longDescription: isEditing
-      ? "Cartagena de Indias, declarada Patrimonio de la Humanidad por la UNESCO, es una de las joyas del Caribe colombiano. Sus calles coloniales, sus fortificaciones y su rica historia la convierten en un destino imperdible.\n\nNuestro paquete incluye:\n- 4 noches de alojamiento en hotel boutique en la Ciudad Amurallada\n- Desayunos diarios\n- Traslados aeropuerto-hotel-aeropuerto\n- Tour guiado por la Ciudad Amurallada\n- Visita al Castillo de San Felipe\n- Tarde libre para disfrutar de las playas\n- Cena de despedida en restaurante típico"
-      : "",
-    itinerary: isEditing
-      ? "Día 1: Llegada a Cartagena\nRecepción en el aeropuerto y traslado al hotel. Check-in y tiempo libre para explorar los alrededores.\n\nDía 2: Tour Ciudad Amurallada\nDesayuno en el hotel. Tour guiado por la Ciudad Amurallada, visitando la Plaza de los Coches, Plaza de la Aduana, Plaza de Bolívar y la Catedral. Tarde libre."
-      : "",
-    includes: isEditing ? ["Alojamiento", "Desayunos", "Traslados", "Tour guiado"] : [],
-    amenities: isEditing
-      ? [
-          { name: "Wi-Fi gratis", icon: "bi-wifi" },
-          { name: "Piscina", icon: "bi-water" },
-          { name: "Desayuno incluido", icon: "bi-cup-hot" },
-          { name: "Ubicación céntrica", icon: "bi-geo-alt" },
-          { name: "Cancelación gratuita", icon: "bi-shield-check" },
-          { name: "Traslados incluidos", icon: "bi-car-front" },
-        ]
-      : [],
-    tags: isEditing ? ["PLAYA", "CULTURAL", "RELAX"] : [],
-    status: isEditing ? "active" : "draft",
-    featured: isEditing,
-  })
+    name: "",
+    location: "Colombia",
+    price: "",
+    capacity: "",
+    duration: "",
+    description: "",
+    longDescription: "",
+    itinerary: "",
+  });
 
   // Estado para las imágenes
-  const [images, setImages] = useState(
-    isEditing
-      ? [
-          { id: 1, url: "https://v0.dev/placeholder.svg?height=200&width=300", main: true },
-          { id: 2, url: "https://v0.dev/placeholder.svg?height=200&width=300&text=Habitación", main: false },
-          { id: 3, url: "https://v0.dev/placeholder.svg?height=200&width=300&text=Piscina", main: false },
-        ]
-      : [],
-  )
+  const [images, setImages] = useState([]);
 
-  // Estado para nuevos campos
-  const [newInclude, setNewInclude] = useState("")
-  const [newTag, setNewTag] = useState("")
+  // Estado para la carga
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Cargar datos del paquete si estamos editando
+  useEffect(() => {
+    if (isEditing) {
+      const fetchPackage = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/packages/${id}`);
+          if (!response.ok) {
+            throw new Error("Error al cargar el paquete");
+          }
+          const data = await response.json();
+          setFormData({
+            name: data.name,
+            location: data.location,
+            price: data.price,
+            capacity: data.capacity,
+            duration: data.duration,
+            description: data.description,
+            longDescription: data.longDescription,
+            itinerary: data.itinerary,
+          });
+          // Si hay imágenes, cargarlas
+          if (data.images) {
+            setImages(data.images.map((url, index) => ({ id: index, url, main: index === 0 })));
+          }
+        } catch (error) {
+          console.error("Error al cargar el paquete:", error);
+        }
+      };
+      fetchPackage();
+    }
+  }, [id, isEditing]);
 
   // Manejadores de eventos
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
-    })
-  }
-
-  const handleAddInclude = () => {
-    if (newInclude.trim()) {
-      setFormData({
-        ...formData,
-        includes: [...formData.includes, newInclude.trim()],
-      })
-      setNewInclude("")
-    }
-  }
-
-  const handleRemoveInclude = (index) => {
-    const newIncludes = [...formData.includes]
-    newIncludes.splice(index, 1)
-    setFormData({
-      ...formData,
-      includes: newIncludes,
-    })
-  }
-
-  const handleAddAmenity = (selectedAmenity) => {
-    if (!formData.amenities.some((amenity) => amenity.name === selectedAmenity.name)) {
-      setFormData({
-        ...formData,
-        amenities: [...formData.amenities, selectedAmenity],
-      });
-    }
-  };
-
-  const handleRemoveAmenity = (index) => {
-    const newAmenities = [...formData.amenities];
-    newAmenities.splice(index, 1);
-    setFormData({
-      ...formData,
-      amenities: newAmenities,
     });
   };
 
-  const handleAddTag = () => {
-    if (newTag.trim()) {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, newTag.trim().toUpperCase()],
-      })
-      setNewTag("")
-    }
-  }
-
-  const handleRemoveTag = (index) => {
-    const newTags = [...formData.tags]
-    newTags.splice(index, 1)
-    setFormData({
-      ...formData,
-      tags: newTags,
-    })
-  }
-
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files)
+    const files = Array.from(e.target.files);
     const newImages = files.map((file, index) => ({
       id: Date.now() + index,
       url: URL.createObjectURL(file),
       main: images.length === 0 && index === 0, // Primera imagen como principal si no hay otras
       file,
-    }))
+    }));
 
-    setImages([...images, ...newImages])
-  }
+    setImages([...images, ...newImages]);
+  };
 
   const handleRemoveImage = (id) => {
-    const newImages = images.filter((img) => img.id !== id)
+    const newImages = images.filter((img) => img.id !== id);
 
     // Si eliminamos la imagen principal, establecer la primera como principal
     if (images.find((img) => img.id === id)?.main && newImages.length > 0) {
-      newImages[0].main = true
+      newImages[0].main = true;
     }
 
-    setImages(newImages)
-  }
+    setImages(newImages);
+  };
 
   const handleSetMainImage = (id) => {
     const newImages = images.map((img) => ({
       ...img,
       main: img.id === id,
-    }))
+    }));
 
-    setImages(newImages)
-  }
+    setImages(newImages);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    // Obtener el guide_id del token JWT
+    const token = localStorage.getItem("token");
+    const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar el token
+    const guideId = decodedToken.id; // Obtener el ID del guía
 
     // Datos a enviar al backend
     const packageData = {
+      guide_id: guideId,
       name: formData.name,
       location: formData.location,
       price: formData.price,
       capacity: formData.capacity,
       duration: formData.duration,
       description: formData.description,
-      longDescription: formData.longDescription,
+      long_description: formData.longDescription,
       itinerary: formData.itinerary,
-      includes: formData.includes,
-      amenities: formData.amenities.map((amenity) => amenity.name),
-      tags: formData.tags,
-      status: formData.status, // Estado del paquete
-      images: images.map((img) => img.file || img.url), // Enviar URLs o archivos
     };
 
     try {
+      let response;
       if (isEditing) {
         // Actualizar paquete existente
-        await fetch(`/api/packages/${id}`, {
+        response = await fetch(`${API_BASE_URL}/packages/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(packageData),
         });
-        alert("Paquete actualizado correctamente.");
       } else {
         // Crear nuevo paquete
-        await fetch("/api/packages", {
+        response = await fetch(`${API_BASE_URL}/packages`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(packageData),
         });
-        alert("Paquete creado correctamente.");
       }
 
-      // Redirigir a la lista de paquetes
-      window.location.href = "/guide/packages";
+      if (!response.ok) {
+        throw new Error("Error al guardar el paquete");
+      }
+
+      alert(isEditing ? "Paquete actualizado correctamente." : "Paquete creado correctamente.");
+      navigate("/guide/packages");
     } catch (error) {
       console.error("Error al guardar el paquete:", error);
       alert("Ocurrió un error al guardar el paquete.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -309,20 +257,6 @@ const PackageForm = () => {
                           required
                         />
                       </div>
-                      <div className="col-md-4">
-                        <label htmlFor="nights" className="form-label">
-                          Noches *
-                        </label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          id="nights"
-                          name="nights"
-                          value={formData.nights}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
                     </div>
 
                     <div className="mb-3">
@@ -382,114 +316,6 @@ const PackageForm = () => {
                       ></textarea>
                       <div className="form-text">
                         Detalla el itinerario día por día. Puedes usar formato HTML básico.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Características */}
-                <div className="card border-0 shadow-sm mb-4">
-                  <div className="card-header bg-white py-3">
-                    <h5 className="mb-0">Características</h5>
-                  </div>
-                  <div className="card-body">
-                    <div className="mb-4">
-                      <label className="form-label">Incluye *</label>
-                      <div className="input-group mb-2">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Añadir elemento incluido"
-                          value={newInclude}
-                          onChange={(e) => setNewInclude(e.target.value)}
-                          onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddInclude())}
-                        />
-                        <button type="button" className="btn btn-primary" onClick={handleAddInclude}>
-                          Añadir
-                        </button>
-                      </div>
-                      <div className="d-flex flex-wrap gap-2 mt-2">
-                        {formData.includes.map((item, index) => (
-                          <div key={index} className="badge bg-light text-dark p-2 d-flex align-items-center">
-                            {item}
-                            <button
-                              type="button"
-                              className="btn-close ms-2"
-                              style={{ fontSize: "0.5rem" }}
-                              onClick={() => handleRemoveInclude(index)}
-                            ></button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <label className="form-label">Seleccionar Amenidades</label>
-                      <div className="input-group mb-2">
-                        <select
-                          className="form-select"
-                          onChange={(e) => {
-                            const selectedAmenity = amenityOptions.find(
-                              (option) => option.name === e.target.value
-                            );
-                            if (selectedAmenity) handleAddAmenity(selectedAmenity);
-                          }}
-                        >
-                          <option value="">Selecciona una amenidad</option>
-                          {amenityOptions.map((option, index) => (
-                            <option key={index} value={option.name}>
-                              {option.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="d-flex flex-wrap gap-2 mt-2">
-                        {formData.amenities.map((amenity, index) => (
-                          <div
-                            key={index}
-                            className="badge bg-light text-dark p-2 d-flex align-items-center"
-                          >
-                            <i className={`bi ${amenity.icon} me-2`}></i>
-                            {amenity.name}
-                            <button
-                              type="button"
-                              className="btn-close ms-2"
-                              style={{ fontSize: "0.5rem" }}
-                              onClick={() => handleRemoveAmenity(index)}
-                            ></button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Etiquetas</label>
-                      <div className="input-group mb-2">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Añadir etiqueta"
-                          value={newTag}
-                          onChange={(e) => setNewTag(e.target.value)}
-                          onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
-                        />
-                        <button type="button" className="btn btn-primary" onClick={handleAddTag}>
-                          Añadir
-                        </button>
-                      </div>
-                      <div className="form-text">Las etiquetas ayudan a categorizar y filtrar los paquetes.</div>
-                      <div className="d-flex flex-wrap gap-2 mt-2">
-                        {formData.tags.map((tag, index) => (
-                          <div key={index} className="badge bg-primary p-2 d-flex align-items-center">
-                            {tag}
-                            <button
-                              type="button"
-                              className="btn-close btn-close-white ms-2"
-                              style={{ fontSize: "0.5rem" }}
-                              onClick={() => handleRemoveTag(index)}
-                            ></button>
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </div>
@@ -567,26 +393,9 @@ const PackageForm = () => {
                     <h5 className="mb-0">Publicación</h5>
                   </div>
                   <div className="card-body">
-                    <div className="mb-3">
-                      <label htmlFor="status" className="form-label">
-                        Estado
-                      </label>
-                      <select
-                        className="form-select"
-                        id="status"
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
-                      >
-                        <option value="draft">Borrador</option>
-                        <option value="active">Publicado</option>
-                        <option value="inactive">Inactivo</option>
-                      </select>
-                    </div>
-
                     <div className="d-grid gap-2">
-                      <button type="submit" className="btn btn-primary">
-                        {isEditing ? "Actualizar Paquete" : "Crear Paquete"}
+                      <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                        {isLoading ? "Guardando..." : isEditing ? "Actualizar Paquete" : "Crear Paquete"}
                       </button>
                       <Link to="/guide/packages" className="btn btn-outline-secondary">
                         Cancelar
@@ -611,11 +420,6 @@ const PackageForm = () => {
                           className="card-img-top"
                           style={{ height: "150px", objectFit: "cover" }}
                         />
-                        {formData.featured && (
-                          <div className="position-absolute top-0 end-0 bg-warning text-white m-2 px-2 py-1 rounded-pill">
-                            <small>DESTACADO</small>
-                          </div>
-                        )}
                       </div>
                       <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center mb-2">
@@ -626,13 +430,6 @@ const PackageForm = () => {
                           <i className="bi bi-geo-alt me-1"></i>
                           {formData.location || "Ubicación"}
                         </p>
-                        <div className="mb-2">
-                          {formData.tags.map((tag, index) => (
-                            <span key={index} className="badge bg-light text-dark me-1">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                         <p className="card-text small">
                           {formData.description
                             ? formData.description.length > 100
@@ -650,7 +447,7 @@ const PackageForm = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PackageForm
+export default PackageForm;

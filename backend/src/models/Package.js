@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 
 const Package = sequelize.define('Package', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  guideId: { type: DataTypes.INTEGER, allowNull: false },
+  guideId: { type: DataTypes.INTEGER, allowNull: true },
   name: { type: DataTypes.STRING, allowNull: false },
   location: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.FLOAT, allowNull: false },
@@ -11,7 +11,7 @@ const Package = sequelize.define('Package', {
   duration: { type: DataTypes.STRING },
   description: { type: DataTypes.TEXT },
   longDescription: { type: DataTypes.TEXT },
-  status: { type: DataTypes.ENUM('active', 'inactive', 'draft'), defaultValue: 'draft' },
+  itinerary: { type: DataTypes.TEXT },
 }, { timestamps: true });
 
 module.exports = Package;
