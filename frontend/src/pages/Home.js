@@ -101,12 +101,18 @@ const Home = () => {
           <h2 className="text-center mb-5 display-6">Descubre ideas para tus vacaciones</h2>
           <div className="row g-4">
             <div className="col-md-4">
-              <Link to="/articulo" className="text-decoration-none">
+              <Link to="/article1" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
-                  <img src="https://v0.dev/placeholder.svg?height=200&width=400" className="card-img-top" alt="Playa" />
+                  <img
+                    src="https://media.admagazine.com/photos/618a5e91532cae908aaf29d4/master/w_2560%2Cc_limit/92316.jpg"
+                    className="card-img-top"
+                    alt="Ahorro para viajes"
+                  />
                   <div className="card-body text-center p-4">
-                    <h5 className="card-title text-dark">Escapadas a la playa</h5>
-                    <p className="card-text text-muted mt-2">Descubre los mejores destinos de playa para relajarte</p>
+                    <h5 className="card-title text-dark">Consejos para ahorrar para tus viajes</h5>
+                    <p className="card-text text-muted mt-2">
+                      Aprende cómo planificar y ahorrar para hacer realidad tus sueños de viajar.
+                    </p>
                     <div className="mt-3 text-primary">
                       Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>
@@ -115,16 +121,18 @@ const Home = () => {
               </Link>
             </div>
             <div className="col-md-4">
-              <Link to="/articulo" className="text-decoration-none">
+              <Link to="/article2" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
                   <img
-                    src="https://v0.dev/placeholder.svg?height=200&width=400"
+                    src="https://cuidateplus.marca.com/sites/default/files/styles/natural/public/cms/2022-07/viajar-solo.jpg.webp?itok=5QMb8Oi6"
                     className="card-img-top"
-                    alt="Grupo de amigos"
+                    alt="Viajar solo"
                   />
                   <div className="card-body text-center p-4">
-                    <h5 className="card-title text-dark">Vacaciones en grupo</h5>
-                    <p className="card-text text-muted mt-2">Las mejores experiencias para disfrutar con amigos</p>
+                    <h5 className="card-title text-dark">Consejos para viajar solo</h5>
+                    <p className="card-text text-muted mt-2">
+                      Descubre cómo disfrutar de una experiencia única y segura al viajar solo.
+                    </p>
                     <div className="mt-3 text-primary">
                       Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>
@@ -133,16 +141,18 @@ const Home = () => {
               </Link>
             </div>
             <div className="col-md-4">
-              <Link to="/articulo" className="text-decoration-none">
+              <Link to="/article3" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
                   <img
-                    src="https://v0.dev/placeholder.svg?height=200&width=400"
+                    src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/v1/guides/section_image/blavomfn3isievxessys"
                     className="card-img-top"
-                    alt="Ciudad"
+                    alt="Temporadas para viajar"
                   />
                   <div className="card-body text-center p-4">
-                    <h5 className="card-title text-dark">Escapadas urbanas</h5>
-                    <p className="card-text text-muted mt-2">Explora las ciudades más fascinantes del mundo</p>
+                    <h5 className="card-title text-dark">Las mejores temporadas para viajar</h5>
+                    <p className="card-text text-muted mt-2">
+                      Aprende cuándo es el mejor momento para viajar según tus objetivos y destino.
+                    </p>
                     <div className="mt-3 text-primary">
                       Ver artículo <i className="bi bi-arrow-right"></i>
                     </div>

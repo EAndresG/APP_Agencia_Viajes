@@ -5,6 +5,9 @@ import Articulo from './pages/Articulo';
 import PackageDetail from "./pages/PackageDetail";
 import UserProfile from "./pages/UserProfile";
 import Contact from './pages/Contact';  
+import Article1 from './pages/Article/Article1'
+import Article2 from './pages/Article/Article2'
+import Article3 from './pages/Article/Article3'
 
 // Páginas de autenticación
 import Register from "./pages/Auth/Register"
@@ -47,6 +50,9 @@ function App() {
         <Route path="/PackageDetail" element={<PackageDetail />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/article1" element={<Article1 />} />
+        <Route path="/article2" element={<Article2 />} />
+        <Route path="/article3" element={<Article3 />} />
 
 
         {/* Rutas de autenticación */}
