@@ -1,11 +1,12 @@
 const User = require('../models/User');
 const Guide = require('../models/Guide');
+const Admin = require('../models/Admin'); // Importar el modelo Admin
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, phone, userType, acceptTerms, experience, specialties, description, identification } = req.body;
+    const { firstName, lastName, email, password, phone, userType, acceptTerms } = req.body;
 
     // Verificar si el correo ya está registrado
     const existingUser = await User.findOne({ where: { email } });
@@ -27,8 +28,16 @@ exports.register = async (req, res) => {
       acceptTerms,
     });
 
-    // Si es guía, crear el registro en la tabla `guides`
+    // Si el usuario es un administrador, crear un registro en la tabla admins
+    if (userType === 'admin') {
+      await Admin.create({
+        userId: newUser.id, // Relacionar con el ID del usuario recién creado
+      });
+    }
+
+    // Si el usuario es un guía, crear un registro en la tabla guides
     if (userType === 'guide') {
+      const { description, identification } = req.body;
       await Guide.create({
         userId: newUser.id,
         description,
@@ -64,5 +73,33 @@ exports.login = async (req, res) => {
     res.status(200).json({ message: 'Inicio de sesión exitoso', token, userType: user.userType });
   } catch (error) {
     res.status(500).json({ message: 'Error al iniciar sesión', error });
+  }
+};
+
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Buscar al usuario por correo electrónico
+    const user = await User.findOne({ where: { email, userType: 'admin' } });
+    if (!user) {
+      return res.status(404).json({ message: 'Administrador no encontrado' });
+    }
+
+    // Verificar la contraseña
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Contraseña incorrecta' });
+    }
+
+    // Generar un token JWT
+    const token = jwt.sign({ id: user.id, userType: user.userType }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+
+    res.status(200).json({ message: 'Inicio de sesión exitoso', token });
+  } catch (error) {
+    console.error('Error al iniciar sesión como administrador:', error);
+    res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
   }
 };

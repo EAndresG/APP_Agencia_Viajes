@@ -29,6 +29,8 @@ import AdminReviews from "./pages/AdminPanel/AdminReviews"
 import AdminProfile from "./pages/AdminPanel/AdminProfile"
 import AdminPackageForm from "./pages/AdminPanel/AdminPackageForm"
 import ManageUsers from './pages/AdminPanel/ManageUsers';
+import AdminLogin from './pages/Auth/AdminLogin';
+import AdminRegister from './pages/Auth/AdminRegister';
 
 
 // Importar Bootstrap CSS y JS
@@ -77,6 +79,8 @@ function App() {
         <Route path="/admin/reservations" element={<AdminReservations />} />
         <Route path="/admin/reviews" element={<AdminReviews />} />
         <Route path="/admin/manage-users" element={<ManageUsers />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
 
         {/* Rutas de error */}
       </Routes>
