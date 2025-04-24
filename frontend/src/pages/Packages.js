@@ -60,10 +60,10 @@ const Packages = () => {
     setCurrentPage(1); // Reiniciar a la primera página después de aplicar filtros
   };
 
-  // Redirigir a la página de reserva
-  const handleReserve = (id) => {
-    alert(`Reserva generada para el paquete con ID: ${id}`);
-    // Aquí puedes implementar la lógica para manejar la reserva
+  // Redirigir a Facebook
+  const handleReserve = (pkg) => {
+    const facebookUrl = "https://www.facebook.com";
+    window.open(facebookUrl, "_blank"); // Abrir Facebook en una nueva pestaña
   };
 
   // Obtener los paquetes para la página actual
@@ -182,7 +182,7 @@ const Packages = () => {
                     <p className="card-text small">{pkg.description}</p>
                     <button
                       className="btn btn-success w-100 mt-3"
-                      onClick={() => handleReserve(pkg.id)}
+                      onClick={() => handleReserve(pkg)}
                     >
                       Reservar
                     </button>

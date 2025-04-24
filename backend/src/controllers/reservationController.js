@@ -24,20 +24,21 @@ exports.getReservationById = async (req, res) => {
 
 exports.createReservation = async (req, res) => {
   try {
-    const { userId, packageId, date, people, status, amount } = req.body;
+    const { package_id, total_price } = req.body; // Datos enviados desde el frontend
+    const user_id = req.user.id; // Obtener el ID del usuario autenticado desde el token
 
     const newReservation = await Reservation.create({
-      userId,
-      packageId,
-      date,
-      people,
-      status,
-      amount,
+      userId: user_id,
+      packageId: package_id,
+      totalPrice: total_price,
+      peopleCount: 1, // Por defecto, 1 persona
+      travelDate: new Date(), // Fecha actual como ejemplo
     });
 
-    res.status(201).json({ message: 'Reserva creada con éxito', newReservation });
+    res.status(201).json({ message: "Reservación creada con éxito", newReservation });
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear la reserva', error });
+    console.error("Error al crear la reservación:", error);
+    res.status(500).json({ message: "Error al crear la reservación", error });
   }
 };
 

@@ -35,7 +35,6 @@ const UserProfile = () => {
           setUser(userData); // Guardar los datos del usuario
           setName(userData.firstName + " " + userData.lastName); // Nombre completo
           setPhone(userData.phone || ""); // Teléfono
-          setReservations(userData.reservations || []); // Reservas
         } else {
           console.error("Error al obtener los datos del usuario");
         }
@@ -46,6 +45,32 @@ const UserProfile = () => {
 
     fetchUserData();
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/reservations`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setReservations(data); // Guardar las reservaciones en el estado
+        } else {
+          console.error("Error al obtener las reservaciones");
+        }
+      } catch (error) {
+        console.error("Error al conectar con el backend:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
 
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
