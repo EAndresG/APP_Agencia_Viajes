@@ -1,17 +1,19 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  const token = req.header('Authorization'); // Leer el token del encabezado "Authorization"
+  const token = req.headers.authorization?.split(" ")[1]; // Obtener el token del encabezado
+
   if (!token) {
-    return res.status(401).json({ message: 'Acceso denegado. No se proporcionó un token.' });
+    return res.status(401).json({ message: "Acceso no autorizado" });
   }
 
   try {
-    const verified = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET); // Verificar el token (formato "Bearer <token>")
-    req.user = verified; // Guardar los datos del usuario en req.user
-    next(); // Continuar con la siguiente función middleware o controlador
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verificar el token
+    req.user = decoded; // Agregar los datos del usuario al objeto req
+    next();
   } catch (error) {
-    res.status(401).json({ message: 'Token no válido.' }); // Cambié el código de error a 401 para mayor consistencia
+    console.error("Error al verificar el token:", error);
+    res.status(401).json({ message: "Token inválido o expirado" });
   }
 };
 

@@ -1,82 +1,58 @@
-import { Link } from "react-router-dom"
-import Sidebar from "./components/AdminSidebar"
-import Header from "./components/AdminHeader"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Sidebar from "./components/AdminSidebar";
+import Header from "./components/AdminHeader";
+import API_BASE_URL from "../../apiConfig";
 
 const Dashboard = () => {
-  // Datos de ejemplo para el dashboard
-  const stats = {
-    totalPackages: 12,
-    activePackages: 8,
-    totalReservations: 47,
-    pendingReservations: 5,
-    totalEarnings: 8750,
-    viewsLastMonth: 1243,
-  }
+  const [totalPackages, setTotalPackages] = useState(0); // Estado para almacenar el número total de paquetes
+  const [totalReservations, setTotalReservations] = useState(0); // Estado para almacenar el número total de reservas
+  const [totalEarnings, setTotalEarnings] = useState(0); // Estado para almacenar las ganancias totales
+  const [latestPackages, setLatestPackages] = useState([]); // Estado para almacenar los últimos paquetes
 
-  // Datos de ejemplo para las últimas reservas
-  const latestReservations = [
-    {
-      id: 1,
-      packageName: "Cartagena - Ciudad Amurallada",
-      customerName: "Carlos Rodríguez",
-      date: "15 Abr, 2025",
-      people: 2,
-      status: "Confirmada",
-      amount: 1095,
-    },
-    {
-      id: 2,
-      packageName: "San Andrés - All Inclusive",
-      customerName: "María López",
-      date: "20 Abr, 2025",
-      people: 4,
-      status: "Pendiente",
-      amount: 3200,
-    },
-    {
-      id: 3,
-      packageName: "Medellín - Ciudad de la Eterna Primavera",
-      customerName: "Juan Pérez",
-      date: "05 May, 2025",
-      people: 2,
-      status: "Confirmada",
-      amount: 800,
-    },
-    {
-      id: 4,
-      packageName: "Santa Marta y Tayrona",
-      customerName: "Ana Martínez",
-      date: "12 May, 2025",
-      people: 3,
-      status: "Pendiente",
-      amount: 1450,
-    },
-  ]
+  // Obtener el número total de paquetes desde el backend
+  useEffect(() => {
+    const fetchTotalPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages/count`);
+        if (!response.ok) {
+          throw new Error("Error al obtener el número total de paquetes");
+        }
+        const data = await response.json();
+        setTotalPackages(data.totalPackages); // Actualizar el estado con el número total de paquetes
+      } catch (error) {
+        console.error("Error al cargar el número total de paquetes:", error);
+      }
+    };
 
-  // Datos de ejemplo para los paquetes populares
-  const popularPackages = [
-    {
-      id: 1,
-      name: "Cartagena - Ciudad Amurallada",
-      views: 342,
-      reservations: 18,
-      rating: 4.9,
-    },
-    {
-      id: 2,
-      name: "San Andrés - All Inclusive",
-      views: 287,
-      reservations: 15,
-      rating: 4.7,
-    },
-    {
-      id: 3,
-      name: "Medellín - Ciudad de la Eterna Primavera",
-      views: 215,
-      reservations: 9,
-      rating: 4.8,
-    },
-  ]
+    fetchTotalPackages();
+  }, []);
+
+  // Leer el total de reservas y ganancias desde localStorage
+  useEffect(() => {
+    const storedReservations = parseInt(localStorage.getItem("totalReservations") || "0", 10);
+    const storedEarnings = parseFloat(localStorage.getItem("totalEarnings") || "0");
+    setTotalReservations(storedReservations);
+    setTotalEarnings(storedEarnings);
+  }, []);
+
+  // Obtener los últimos paquetes desde el backend
+  useEffect(() => {
+    const fetchLatestPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages?limit=5`); // Endpoint para obtener los últimos paquetes
+        if (!response.ok) {
+          throw new Error("Error al obtener los últimos paquetes");
+        }
+        const data = await response.json();
+        setLatestPackages(data); // Guardar los paquetes en el estado
+      } catch (error) {
+        console.error("Error al cargar los últimos paquetes:", error);
+      }
+    };
+
+    fetchLatestPackages();
+  }, []);
 
   return (
     <div className="d-flex">
@@ -99,10 +75,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h6 className="text-muted mb-1">Paquetes Totales</h6>
-                      <h3 className="mb-0">{stats.totalPackages}</h3>
-                      <small className="text-success">
-                        <i className="bi bi-arrow-up"></i> {stats.activePackages} activos
-                      </small>
+                      <h3 className="mb-0">{totalPackages}</h3>
                     </div>
                   </div>
                 </div>
@@ -120,10 +93,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h6 className="text-muted mb-1">Reservas Totales</h6>
-                      <h3 className="mb-0">{stats.totalReservations}</h3>
-                      <small className="text-warning">
-                        <i className="bi bi-clock"></i> {stats.pendingReservations} pendientes
-                      </small>
+                      <h3 className="mb-0">{totalReservations}</h3>
                     </div>
                   </div>
                 </div>
@@ -141,8 +111,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h6 className="text-muted mb-1">Ganancias Totales</h6>
-                      <h3 className="mb-0">${stats.totalEarnings}</h3>
-                      <small className="text-muted">Este año</small>
+                      <h3 className="mb-0">${totalEarnings.toFixed(2)}</h3>
                     </div>
                   </div>
                 </div>
@@ -160,7 +129,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h6 className="text-muted mb-1">Vistas</h6>
-                      <h3 className="mb-0">{stats.viewsLastMonth}</h3>
+                      <h3 className="mb-0">1243</h3>
                       <small className="text-muted">Último mes</small>
                     </div>
                   </div>
@@ -170,14 +139,14 @@ const Dashboard = () => {
           </div>
 
           <div className="row g-4">
-            {/* Latest Reservations */}
-            <div className="col-lg-8">
+            {/* Latest Packages */}
+            <div className="col-lg-6">
               <div className="card border-0 shadow-sm">
                 <div className="card-header bg-white py-3">
                   <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Últimas Reservas</h5>
-                    <Link to="/guide/reservations" className="btn btn-sm btn-outline-primary">
-                      Ver todas
+                    <h5 className="mb-0">Últimos Paquetes</h5>
+                    <Link to="/admin/packages" className="btn btn-outline-primary">
+                      <i className="bi bi-box-seam me-2"></i>Ver Paquetes
                     </Link>
                   </div>
                 </div>
@@ -186,37 +155,27 @@ const Dashboard = () => {
                     <table className="table table-hover align-middle mb-0">
                       <thead className="bg-light">
                         <tr>
-                          <th>Paquete</th>
-                          <th>Cliente</th>
-                          <th>Fecha</th>
-                          <th>Personas</th>
-                          <th>Estado</th>
-                          <th>Monto</th>
+                          <th>Nombre</th>
+                          <th>Destino</th>
+                          <th>Precio</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {latestReservations.map((reservation) => (
-                          <tr key={reservation.id}>
-                            <td>{reservation.packageName}</td>
-                            <td>{reservation.customerName}</td>
-                            <td>{reservation.date}</td>
-                            <td>{reservation.people}</td>
-                            <td>
-                              <span
-                                className={`badge ${
-                                  reservation.status === "Confirmada"
-                                    ? "bg-success"
-                                    : reservation.status === "Pendiente"
-                                      ? "bg-warning"
-                                      : "bg-danger"
-                                }`}
-                              >
-                                {reservation.status}
-                              </span>
+                        {latestPackages.length > 0 ? (
+                          latestPackages.map((pkg) => (
+                            <tr key={pkg.id}>
+                              <td>{pkg.name}</td>
+                              <td>{pkg.location}</td>
+                              <td>${pkg.price}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="3" className="text-center text-muted">
+                              No hay paquetes disponibles.
                             </td>
-                            <td>${reservation.amount}</td>
                           </tr>
-                        ))}
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -224,49 +183,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Popular Packages */}
+            {/* Quick Actions */}
             <div className="col-lg-4">
-              <div className="card border-0 shadow-sm">
-                <div className="card-header bg-white py-3">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Paquetes Populares</h5>
-                    <Link to="/guide/packages" className="btn btn-sm btn-outline-primary">
-                      Ver todos
-                    </Link>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <ul className="list-group list-group-flush">
-                    {popularPackages.map((pkg) => (
-                      <li key={pkg.id} className="list-group-item px-0 py-3 border-bottom">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div>
-                            <h6 className="mb-1">{pkg.name}</h6>
-                            <div className="d-flex align-items-center">
-                              <div className="me-3">
-                                <i className="bi bi-eye text-muted me-1"></i>
-                                <small className="text-muted">{pkg.views} vistas</small>
-                              </div>
-                              <div>
-                                <i className="bi bi-calendar-check text-muted me-1"></i>
-                                <small className="text-muted">{pkg.reservations} reservas</small>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-end">
-                            <div className="d-flex align-items-center">
-                              <i className="bi bi-star-fill text-warning me-1"></i>
-                              <span>{pkg.rating}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
               <div className="card border-0 shadow-sm mt-4">
                 <div className="card-header bg-white py-3">
                   <h5 className="mb-0">Acciones Rápidas</h5>
@@ -276,11 +194,11 @@ const Dashboard = () => {
                     <Link to="/admin/packages/create" className="btn btn-primary">
                       <i className="bi bi-plus-circle me-2"></i>Crear Nuevo Paquete
                     </Link>
-                    <Link to="/admin/reservations" className="btn btn-outline-primary">
-                      <i className="bi bi-calendar-check me-2"></i>Gestionar Reservas
+                    <Link to="/admin/packages" className="btn btn-outline-primary">
+                      <i className="bi bi-box-seam me-2"></i>Ver Paquetes
                     </Link>
-                    <Link to="/admin/manage-users" className="btn btn-outline-secondary">
-                      <i className="bi bi-people me-2"></i>Gestionar Usuarios
+                    <Link to="/admin/profile" className="btn btn-outline-secondary">
+                      <i className="bi bi-person me-2"></i>Actualizar Perfil
                     </Link>
                   </div>
                 </div>
@@ -290,7 +208,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
