@@ -26,7 +26,6 @@ const Packages = () => {
           throw new Error("Error al obtener los paquetes");
         }
         const data = await response.json();
-        console.log("Paquetes obtenidos:", data); // Verificar los datos en la consola
         setPackages(data); // Guardar los paquetes en el estado
       } catch (error) {
         console.error("Error al cargar los paquetes:", error);
@@ -58,20 +57,6 @@ const Packages = () => {
 
     setFilteredPackages(filtered);
     setCurrentPage(1); // Reiniciar a la primera página después de aplicar filtros
-  };
-
-  // Redirigir a Facebook y actualizar el contador de reservas
-  const handleReserve = (pkg) => {
-    const facebookUrl = "https://www.facebook.com";
-    window.open(facebookUrl, "_blank"); // Abrir Facebook en una nueva pestaña
-
-    // Incrementar el contador de reservas en localStorage
-    const currentCount = parseInt(localStorage.getItem("totalReservations") || "0", 10);
-    localStorage.setItem("totalReservations", currentCount + 1);
-
-    // Sumar el precio del paquete a las ganancias totales en localStorage
-    const currentEarnings = parseFloat(localStorage.getItem("totalEarnings") || "0");
-    localStorage.setItem("totalEarnings", currentEarnings + pkg.price);
   };
 
   // Obtener los paquetes para la página actual
@@ -168,7 +153,7 @@ const Packages = () => {
                 <div className="card h-100 border-0 shadow-sm package-card" style={{ cursor: "pointer" }}>
                   <div className="position-relative">
                     <img
-                      src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
+                      src={pkg.image} // Usar directamente la URL de la imagen enviada por el backend
                       className="card-img-top"
                       alt={pkg.name}
                       style={{ height: "200px", objectFit: "cover" }}

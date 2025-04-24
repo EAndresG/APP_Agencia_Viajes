@@ -45,5 +45,6 @@ app.use("/api/contact", contactRoutes); // Registrar las rutas de contacto
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
 
-
+// Servir archivos estáticos desde la carpeta "public"
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 
