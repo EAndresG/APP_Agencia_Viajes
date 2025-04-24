@@ -90,3 +90,13 @@ exports.deletePackage = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar el paquete', error });
   }
 };
+
+exports.countPackages = async (req, res) => {
+  try {
+    const totalPackages = await Package.count(); // Contar todos los paquetes
+    res.status(200).json({ totalPackages });
+  } catch (error) {
+    console.error('Error al contar los paquetes:', error);
+    res.status(500).json({ message: 'Error al contar los paquetes', error });
+  }
+};

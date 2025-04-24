@@ -1,17 +1,48 @@
-import { Link } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import Header from "./components/Header"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import API_BASE_URL from "../../apiConfig";
 
 const Dashboard = () => {
-  // Datos de ejemplo para el dashboard
+  const [totalPackages, setTotalPackages] = useState(0); // Estado para almacenar el número total de paquetes
+  const [totalReservations, setTotalReservations] = useState(0); // Estado para almacenar el número total de reservas
+  const [totalEarnings, setTotalEarnings] = useState(0); // Estado para almacenar las ganancias totales
+
+  // Obtener el número total de paquetes desde el backend
+  useEffect(() => {
+    const fetchTotalPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages/count`);
+        if (!response.ok) {
+          throw new Error("Error al obtener el número total de paquetes");
+        }
+        const data = await response.json();
+        setTotalPackages(data.totalPackages); // Actualizar el estado con el número total de paquetes
+      } catch (error) {
+        console.error("Error al cargar el número total de paquetes:", error);
+      }
+    };
+
+    fetchTotalPackages();
+  }, []);
+
+  // Leer el total de reservas y ganancias desde localStorage
+  useEffect(() => {
+    const storedReservations = parseInt(localStorage.getItem("totalReservations") || "0", 10);
+    const storedEarnings = parseFloat(localStorage.getItem("totalEarnings") || "0");
+    setTotalReservations(storedReservations);
+    setTotalEarnings(storedEarnings);
+  }, []);
+
   const stats = {
-    totalPackages: 12,
-    activePackages: 8,
-    totalReservations: 47,
+    totalPackages, // Usar el estado actualizado
+    activePackages: 8, // Este valor puede ser dinámico si lo necesitas
+    totalReservations, // Usar el estado actualizado
     pendingReservations: 5,
-    totalEarnings: 8750,
+    totalEarnings, // Usar el estado actualizado
     viewsLastMonth: 1243,
-  }
+  };
 
   // Datos de ejemplo para las últimas reservas
   const latestReservations = [
@@ -51,7 +82,7 @@ const Dashboard = () => {
       status: "Pendiente",
       amount: 1450,
     },
-  ]
+  ];
 
   // Datos de ejemplo para los paquetes populares
   const popularPackages = [
@@ -76,7 +107,7 @@ const Dashboard = () => {
       reservations: 9,
       rating: 4.8,
     },
-  ]
+  ];
 
   return (
     <div className="d-flex">
@@ -141,7 +172,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h6 className="text-muted mb-1">Ganancias Totales</h6>
-                      <h3 className="mb-0">${stats.totalEarnings}</h3>
+                      <h3 className="mb-0">${stats.totalEarnings.toFixed(2)}</h3>
                       <small className="text-muted">Este año</small>
                     </div>
                   </div>
@@ -290,7 +321,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

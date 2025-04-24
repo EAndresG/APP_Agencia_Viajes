@@ -60,10 +60,18 @@ const Packages = () => {
     setCurrentPage(1); // Reiniciar a la primera página después de aplicar filtros
   };
 
-  // Redirigir a Facebook
+  // Redirigir a Facebook y actualizar el contador de reservas
   const handleReserve = (pkg) => {
     const facebookUrl = "https://www.facebook.com";
     window.open(facebookUrl, "_blank"); // Abrir Facebook en una nueva pestaña
+
+    // Incrementar el contador de reservas en localStorage
+    const currentCount = parseInt(localStorage.getItem("totalReservations") || "0", 10);
+    localStorage.setItem("totalReservations", currentCount + 1);
+
+    // Sumar el precio del paquete a las ganancias totales en localStorage
+    const currentEarnings = parseFloat(localStorage.getItem("totalEarnings") || "0");
+    localStorage.setItem("totalEarnings", currentEarnings + pkg.price);
   };
 
   // Obtener los paquetes para la página actual
