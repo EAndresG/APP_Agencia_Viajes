@@ -15,23 +15,6 @@ const Sidebar = () => {
           <h4 className="mb-0 font-script text-white">Private Holidays</h4>
         </Link>
       </div>
-
-      <div className="p-3 border-bottom border-secondary">
-        <div className="d-flex align-items-center">
-          <img
-            src="https://v0.dev/placeholder.svg?height=50&width=50"
-            alt="Perfil"
-            className="rounded-circle me-2"
-            width="50"
-            height="50"
-          />
-          <div>
-            <h6 className="mb-0">Carlos Gutiérrez</h6>
-            <small className="text-muted">Guía Turístico</small>
-          </div>
-        </div>
-      </div>
-
       <div className="py-3 flex-grow-1">
         <ul className="nav flex-column">
           <li className="nav-item">
@@ -52,38 +35,11 @@ const Sidebar = () => {
               Mis Paquetes
             </Link>
           </li>
-          <li className="nav-item">
-            <Link
-              to="/guide/reservations"
-              className={`nav-link px-3 py-2 ${isActive("/guide/reservations") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-calendar-check me-2"></i>
-              Reservas
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              to="/guide/reviews"
-              className={`nav-link px-3 py-2 ${isActive("/guide/reviews") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-star me-2"></i>
-              Reseñas
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              to="/guide/profile"
-              className={`nav-link px-3 py-2 ${isActive("/guide/profile") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-person me-2"></i>
-              Mi Perfil
-            </Link>
-          </li>
         </ul>
       </div>
 
       <div className="mt-auto p-3 border-top border-secondary">
-        <Link to="/logout" className="btn btn-outline-light w-100">
+        <Link to="/" className="btn btn-outline-light w-100">
           <i className="bi bi-box-arrow-right me-2"></i>
           Cerrar Sesión
         </Link>

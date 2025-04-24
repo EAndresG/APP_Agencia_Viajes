@@ -11,13 +11,13 @@ const Footer = () => {
               Ofrecemos experiencias de viaje inolvidables con atención personalizada y destinos exclusivos.
             </p>
             <div className="d-flex gap-3">
-              <a href="#" className="text-white">
+              <a href="https://facebook.com" className="text-white">
                 <i className="bi bi-facebook"></i>
               </a>
-              <a href="#" className="text-white">
+              <a href="https://twitter.com" className="text-white">
                 <i className="bi bi-twitter"></i>
               </a>
-              <a href="#" className="text-white">
+              <a href="https://instagram.com" className="text-white">
                 <i className="bi bi-instagram"></i>
               </a>
             </div>
@@ -32,13 +32,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to="/experiences" className="text-white text-decoration-none">
-                  Experiencias
+                <Link to="/packages" className="text-white text-decoration-none">
+                  Paquetes
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to="/faq" className="text-white text-decoration-none">
-                  Preguntas
+                <Link to="/userprofile" className="text-white text-decoration-none">
+                  Mi Perfil
                 </Link>
               </li>
               <li className="mb-2">
@@ -53,22 +53,22 @@ const Footer = () => {
             <h5 className="mb-3">Destinos populares</h5>
             <ul className="list-unstyled">
               <li className="mb-2">
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/packages" className="text-white text-decoration-none">
                   Cartagena
                 </a>
               </li>
               <li className="mb-2">
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/packages" className="text-white text-decoration-none">
                   San Andrés
                 </a>
               </li>
               <li className="mb-2">
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/packages" className="text-white text-decoration-none">
                   Medellín
                 </a>
               </li>
               <li className="mb-2">
-                <a href="#" className="text-white text-decoration-none">
+                <a href="/packages" className="text-white text-decoration-none">
                   Santa Marta
                 </a>
               </li>
@@ -80,7 +80,7 @@ const Footer = () => {
             <ul className="list-unstyled">
               <li className="mb-2 d-flex align-items-center">
                 <i className="bi bi-geo-alt me-2"></i>
-                <span>Calle 123 #45-67, Bogotá</span>
+                <span>Calle 55 #45-67, Cali</span>
               </li>
               <li className="mb-2 d-flex align-items-center">
                 <i className="bi bi-telephone me-2"></i>
@@ -101,10 +101,10 @@ const Footer = () => {
             <p className="mb-0">&copy; 2025 Private Holidays. Todos los derechos reservados.</p>
           </div>
           <div className="col-md-6 text-center text-md-end mt-3 mt-md-0">
-            <a href="#" className="text-white text-decoration-none me-3">
+            <a href="https://policies.google.com/terms?hl=es" className="text-white text-decoration-none me-3">
               Términos y condiciones
             </a>
-            <a href="#" className="text-white text-decoration-none">
+            <a href="https://policies.google.com/privacy?hl=es" className="text-white text-decoration-none">
               Política de privacidad
             </a>
           </div>

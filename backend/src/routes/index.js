@@ -6,6 +6,7 @@ const packageRoutes = require('./packageRoutes');
 const reservationRoutes = require('./reservationRoutes');
 const reviewRoutes = require('./reviewRoutes');
 const contactRoutes = require('./contactRoutes');
+const adminRoutes = require('./adminRoutes'); // Importar las rutas de administrador
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/packages', packageRoutes); // Rutas de paquetes turísticos
 router.use('/reservations', reservationRoutes); // Rutas de reservas
 router.use('/reviews', reviewRoutes); // Rutas de reseñas
 router.use('/contact', contactRoutes); // Rutas de mensajes de contacto
+router.use('/admin', adminRoutes); // Rutas de administrador
 
 module.exports = router;

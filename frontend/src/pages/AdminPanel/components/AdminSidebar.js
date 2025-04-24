@@ -15,23 +15,6 @@ const Sidebar = () => {
           <h4 className="mb-0 font-script text-white">Private Holidays</h4>
         </Link>
       </div>
-
-      <div className="p-3 border-bottom border-secondary">
-        <div className="d-flex align-items-center">
-          <img
-            src="https://v0.dev/placeholder.svg?height=50&width=50"
-            alt="Perfil"
-            className="rounded-circle me-2"
-            width="50"
-            height="50"
-          />
-          <div>
-            <h6 className="mb-0">Carlos Gutiérrez</h6>
-            <small className="text-muted">Administrador</small>
-          </div>
-        </div>
-      </div>
-
       <div className="py-3 flex-grow-1">
         <ul className="nav flex-column">
           <li className="nav-item">
@@ -54,38 +37,11 @@ const Sidebar = () => {
           </li>
           <li className="nav-item">
             <Link
-              to="/admin/reservations"
-              className={`nav-link px-3 py-2 ${isActive("/admin/reservations") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-calendar-check me-2"></i>
-              Reservas
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              to="/admin/reviews"
-              className={`nav-link px-3 py-2 ${isActive("/admin/reviews") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-star me-2"></i>
-              Reseñas
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
               to="/admin/manage-users"
               className={`nav-link px-3 py-2 ${isActive("/admin/manage-users") ? "active bg-primary bg-opacity-25" : "text-white"}`}
             >
               <i className="bi bi-people me-2"></i>
               Usuarios
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              to="/admin/profile"
-              className={`nav-link px-3 py-2 ${isActive("/admin/profile") ? "active bg-primary bg-opacity-25" : "text-white"}`}
-            >
-              <i className="bi bi-person me-2"></i>
-              Mi Perfil
             </Link>
           </li>
         </ul>

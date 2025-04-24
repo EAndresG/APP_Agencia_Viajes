@@ -64,7 +64,7 @@ const Dashboard = () => {
         <div className="container-fluid px-4 py-4">
           {/* Stats Cards */}
           <div className="row g-4 mb-4">
-            <div className="col-xl-3 col-md-6">
+            <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
                   <div className="d-flex align-items-center">
@@ -82,7 +82,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="col-xl-3 col-md-6">
+            <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
                   <div className="d-flex align-items-center">
@@ -100,7 +100,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="col-xl-3 col-md-6">
+            <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
                   <div className="d-flex align-items-center">
@@ -117,25 +117,6 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-
-            <div className="col-xl-3 col-md-6">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body">
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0 me-3">
-                      <div className="bg-warning bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-eye text-warning fs-4"></i>
-                      </div>
-                    </div>
-                    <div>
-                      <h6 className="text-muted mb-1">Vistas</h6>
-                      <h3 className="mb-0">1243</h3>
-                      <small className="text-muted">Último mes</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="row g-4">
@@ -145,8 +126,8 @@ const Dashboard = () => {
                 <div className="card-header bg-white py-3">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Últimos Paquetes</h5>
-                    <Link to="/admin/packages" className="btn btn-outline-primary">
-                      <i className="bi bi-box-seam me-2"></i>Ver Paquetes
+                    <Link to="/admin/packages" className="btn btn-sm btn-outline-primary">
+                      Ver todos
                     </Link>
                   </div>
                 </div>
@@ -155,18 +136,33 @@ const Dashboard = () => {
                     <table className="table table-hover align-middle mb-0">
                       <thead className="bg-light">
                         <tr>
-                          <th>Nombre</th>
-                          <th>Destino</th>
-                          <th>Precio</th>
+                          <th>
+                            <i className="bi bi-box-seam me-2"></i>Nombre
+                          </th>
+                          <th>
+                            <i className="bi bi-geo-alt-fill me-2"></i>Destino
+                          </th>
+                          <th>
+                            <i className="bi bi-currency-dollar me-2"></i>Precio
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         {latestPackages.length > 0 ? (
                           latestPackages.map((pkg) => (
                             <tr key={pkg.id}>
-                              <td>{pkg.name}</td>
-                              <td>{pkg.location}</td>
-                              <td>${pkg.price}</td>
+                              <td>
+                                <i className="bi bi-box me-2 text-primary"></i>
+                                {pkg.name}
+                              </td>
+                              <td>
+                                <i className="bi bi-geo-alt me-2 text-success"></i>
+                                {pkg.location}
+                              </td>
+                              <td>
+                                <i className="bi bi-currency-dollar me-2 text-info"></i>
+                                ${pkg.price}
+                              </td>
                             </tr>
                           ))
                         ) : (
@@ -191,14 +187,14 @@ const Dashboard = () => {
                 </div>
                 <div className="card-body">
                   <div className="d-grid gap-2">
-                    <Link to="/admin/packages/create" className="btn btn-primary">
+                    <Link to="/admin/packageForm/create" className="btn btn-primary">
                       <i className="bi bi-plus-circle me-2"></i>Crear Nuevo Paquete
                     </Link>
                     <Link to="/admin/packages" className="btn btn-outline-primary">
                       <i className="bi bi-box-seam me-2"></i>Ver Paquetes
                     </Link>
-                    <Link to="/admin/profile" className="btn btn-outline-secondary">
-                      <i className="bi bi-person me-2"></i>Actualizar Perfil
+                    <Link to="/admin/manage-users" className="btn btn-outline-secondary">
+                      <i className="bi bi-people me-2"></i>Gestionar Usuarios
                     </Link>
                   </div>
                 </div>

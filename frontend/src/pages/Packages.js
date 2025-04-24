@@ -94,7 +94,7 @@ const Packages = () => {
         <div
           className="bg-image"
           style={{
-            backgroundImage: "url('https://v0.dev/placeholder.svg?height=400&width=1200')",
+            backgroundImage: "url('https://www.infobae.com/new-resizer/-jOmFdccGnyJDnHw9PbeKe-y1po=/arc-anglerfish-arc2-prod-infobae/public/EJ4Y4ODTOFDOVJXKP4RLBRBUUI.jpg')",
             height: "400px",
             backgroundSize: "cover",
             backgroundPosition: "center",

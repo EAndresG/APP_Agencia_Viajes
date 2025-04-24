@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Guide = require('../models/Guide');
 const Admin = require('../models/Admin'); // Importar el modelo Admin
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
@@ -80,26 +80,38 @@ exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Buscar al usuario por correo electrónico
-    const user = await User.findOne({ where: { email, userType: 'admin' } });
-    if (!user) {
-      return res.status(404).json({ message: 'Administrador no encontrado' });
+    // Buscar al administrador en la base de datos
+    const admin = await User.findOne({ where: { email, userType: "admin" } });
+    if (!admin) {
+      return res.status(404).json({ message: "Administrador no encontrado" });
     }
 
     // Verificar la contraseña
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Contraseña incorrecta' });
+      return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    // Generar un token JWT
-    const token = jwt.sign({ id: user.id, userType: user.userType }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
+    // Generar el token JWT
+    const token = jwt.sign(
+      { id: admin.id, userType: admin.userType },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-    res.status(200).json({ message: 'Inicio de sesión exitoso', token });
+    // Devolver el token y los datos del administrador
+    res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      token,
+      admin: {
+        id: admin.id,
+        firstName: admin.firstName,
+        lastName: admin.lastName,
+        email: admin.email,
+      },
+    });
   } catch (error) {
-    console.error('Error al iniciar sesión como administrador:', error);
-    res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+    console.error("Error al iniciar sesión:", error);
+    res.status(500).json({ message: "Error al iniciar sesión" });
   }
 };

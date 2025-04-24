@@ -126,7 +126,7 @@ const Packages = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <img
-                              src={pkg.image || "/placeholder.svg"}
+                              src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
                               alt={pkg.name}
                               className="rounded me-3"
                               width="60"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Form, Badge } from "react-bootstrap";
+import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,6 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [reservations, setReservations] = useState([]);
 
   // Obtener los datos del usuario desde el backend
   useEffect(() => {
@@ -45,32 +44,6 @@ const UserProfile = () => {
 
     fetchUserData();
   }, [navigate]);
-
-  useEffect(() => {
-    const fetchReservations = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/reservations`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setReservations(data); // Guardar las reservaciones en el estado
-        } else {
-          console.error("Error al obtener las reservaciones");
-        }
-      } catch (error) {
-        console.error("Error al conectar con el backend:", error);
-      }
-    };
-
-    fetchReservations();
-  }, []);
 
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
@@ -107,12 +80,6 @@ const UserProfile = () => {
     }
   };
 
-  const handleDeleteReservation = (id) => {
-    const updatedReservations = reservations.filter((reservation) => reservation.id !== id);
-    setReservations(updatedReservations);
-    alert("Reserva eliminada correctamente.");
-  };
-
   if (!user) {
     return <p className="text-center mt-5">Cargando datos del usuario...</p>;
   }
@@ -140,9 +107,6 @@ const UserProfile = () => {
                   <i className="bi bi-telephone me-2"></i>
                   {phone}
                 </p>
-                <Button variant="outline-primary" className="mt-3">
-                  Cambiar Foto
-                </Button>
               </Card.Body>
             </Card>
           </Col>
@@ -177,60 +141,6 @@ const UserProfile = () => {
                     Guardar Cambios
                   </Button>
                 </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        {/* Reservas */}
-        <Row>
-          <Col>
-            <Card className="shadow-sm">
-              <Card.Header className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Mis Reservas</h5>
-                <Button variant="outline-primary" onClick={() => navigate("/packages")}>
-                  <i className="bi bi-plus-circle me-2"></i>Agregar Reserva
-                </Button>
-              </Card.Header>
-              <Card.Body>
-                {reservations.length > 0 ? (
-                  <ul className="list-group">
-                    {reservations.map((reservation) => (
-                      <li
-                        key={reservation.id}
-                        className="list-group-item d-flex justify-content-between align-items-center"
-                      >
-                        <div>
-                          <h6 className="mb-0">{reservation.packageName}</h6>
-                          <small className="text-muted">Fecha: {reservation.date}</small>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <Badge
-                            bg={
-                              reservation.status === "Confirmado"
-                                ? "success"
-                                : reservation.status === "Cancelada"
-                                ? "danger"
-                                : "warning"
-                            }
-                            className="text-uppercase me-3"
-                          >
-                            {reservation.status}
-                          </Badge>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDeleteReservation(reservation.id)}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </Button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted">No tienes reservas aún.</p>
-                )}
               </Card.Body>
             </Card>
           </Col>

@@ -51,41 +51,29 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      setIsLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/admin-login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      try {
-        const response = await fetch(`${API_BASE_URL}/auth/admin-login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
+      const data = await response.json();
 
-        const data = await response.json();
-
-        if (response.ok) {
-          // Almacenar el token al iniciar sesión
-          localStorage.setItem("token", data.token);
-
-          // Emitir el evento authChange
-          window.dispatchEvent(new Event("authChange"));
-
-          // Redirigir al dashboard de administrador
-          navigate("/admin/dashboard");
-        } else {
-          alert(data.message || "Error al iniciar sesión.");
-        }
-      } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        alert("Ocurrió un error al iniciar sesión.");
-      } finally {
-        setIsLoading(false);
+      if (response.ok) {
+        localStorage.setItem("token", data.token); // Guardar el token en localStorage
+        navigate("/admin/dashboard"); // Redirigir al dashboard
+      } else {
+        alert(data.message || "Error al iniciar sesión.");
       }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      alert("Ocurrió un error al iniciar sesión.");
     }
   };
 

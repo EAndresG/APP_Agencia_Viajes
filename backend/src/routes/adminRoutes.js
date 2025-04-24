@@ -1,9 +1,9 @@
 const express = require("express");
 const { getAdminProfile } = require("../controllers/adminController");
-const verifyToken = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.get("/profile", verifyToken, getAdminProfile);
+// Ruta para obtener el perfil del administrador (sin autenticación)
+router.get("/profile", getAdminProfile);
 
 module.exports = router;

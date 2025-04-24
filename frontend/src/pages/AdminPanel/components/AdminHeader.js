@@ -1,47 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../../apiConfig"; // Asegúrate de que esta URL esté configurada correctamente
 
 const Header = ({ title }) => {
-  const [admin, setAdmin] = useState(null); // Estado para almacenar los datos del administrador
+  const [admin] = useState({ firstName: "Admin", lastName: "User" }); // Datos ficticios del administrador
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchAdminData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/admin/login"); // Redirigir al login si no hay token
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/admin/profile`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos del administrador");
-        }
-
-        const adminData = await response.json();
-        setAdmin(adminData); // Guardar los datos del administrador en el estado
-      } catch (error) {
-        console.error("Error al obtener los datos del administrador:", error);
-        localStorage.removeItem("token"); // Eliminar el token si hay un error
-        navigate("/admin/login"); // Redirigir al login
-      }
-    };
-
-    fetchAdminData();
-  }, [navigate]);
-
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Eliminar el token del localStorage
     navigate("/admin/login"); // Redirigir al login
   };
 
@@ -67,14 +33,9 @@ const Header = ({ title }) => {
                   width="32"
                   height="32"
                 />
-                <span>{admin ? admin.nombre : "Cargando..."}</span>
+                <span>{`${admin.firstName} ${admin.lastName}`}</span>
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li>
-                  <Link className="dropdown-item" to="/admin/profile">
-                    <i className="bi bi-person me-2"></i>Mi Perfil
-                  </Link>
-                </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>

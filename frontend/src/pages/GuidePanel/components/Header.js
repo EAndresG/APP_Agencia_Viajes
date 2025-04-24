@@ -71,11 +71,6 @@ const Header = ({ title }) => {
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li>
-                  <Link className="dropdown-item" to="/guide/profile">
-                    <i className="bi bi-person me-2"></i>Mi Perfil
-                  </Link>
-                </li>
-                <li>
                   <hr className="dropdown-divider" />
                 </li>
                 <li>

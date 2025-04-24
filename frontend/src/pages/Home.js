@@ -35,7 +35,7 @@ const Home = () => {
         <div
           className="bg-image"
           style={{
-            backgroundImage: "url('https://v0.dev/placeholder.svg?height=600&width=1200')",
+            backgroundImage: "url('https://www.infobae.com/new-resizer/-jOmFdccGnyJDnHw9PbeKe-y1po=/arc-anglerfish-arc2-prod-infobae/public/EJ4Y4ODTOFDOVJXKP4RLBRBUUI.jpg')",
             height: "600px",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -191,7 +191,7 @@ const Home = () => {
                           <i className="bi bi-geo-alt text-primary me-2"></i>
                           <small className="text-muted">{pkg.location || "Ubicación no disponible"}</small>
                         </div>
-                        <Link to={`/packages/${pkg.id}`} className="btn btn-primary">
+                        <Link to="https://www.facebook.com" target="_blank" className="btn btn-primary">
                           Reservar ahora
                         </Link>
                       </div>
