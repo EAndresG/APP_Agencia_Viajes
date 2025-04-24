@@ -1,35 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Button, Form, Badge } from "react-bootstrap";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../apiConfig";
 
 const UserProfile = () => {
   const navigate = useNavigate();
 
-  const user = {
-    name: "Carlos Gutiérrez",
-    email: "carlos.guia@ejemplo.com",
-    phone: "+57 300 123 4567",
-    reservations: [
-      {
-        id: 1,
-        packageName: "Cartagena - Ciudad Amurallada",
-        date: "2025-04-15",
-        status: "Confirmado",
-      },
-      {
-        id: 2,
-        packageName: "San Andrés - All Inclusive",
-        date: "2025-05-10",
-        status: "Pendiente",
-      },
-    ],
-  };
+  // Estados para manejar los datos del usuario
+  const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [reservations, setReservations] = useState([]);
 
-  const [name, setName] = useState(user.name);
-  const [phone, setPhone] = useState(user.phone);
-  const [reservations, setReservations] = useState(user.reservations);
+  // Obtener los datos del usuario desde el backend
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+      if (!token) {
+        navigate("/login"); // Redirigir al login si no hay token
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Enviar el token en los encabezados
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData); // Guardar los datos del usuario
+          setName(userData.firstName + " " + userData.lastName); // Nombre completo
+          setPhone(userData.phone || ""); // Teléfono
+          setReservations(userData.reservations || []); // Reservas
+        } else {
+          console.error("Error al obtener los datos del usuario");
+        }
+      } catch (error) {
+        console.error("Error al conectar con el backend:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   const handleSaveChanges = () => {
     // Aquí puedes enviar los datos actualizados al backend
@@ -42,6 +58,10 @@ const UserProfile = () => {
     setReservations(updatedReservations);
     alert("Reserva eliminada correctamente.");
   };
+
+  if (!user) {
+    return <p className="text-center mt-5">Cargando datos del usuario...</p>;
+  }
 
   return (
     <>
@@ -60,11 +80,11 @@ const UserProfile = () => {
                   width="150"
                   height="150"
                 />
-                <h3>{user.name}</h3>
+                <h3>{name}</h3>
                 <p className="text-muted">{user.email}</p>
                 <p className="text-muted">
                   <i className="bi bi-telephone me-2"></i>
-                  {user.phone}
+                  {phone}
                 </p>
                 <Button variant="outline-primary" className="mt-3">
                   Cambiar Foto

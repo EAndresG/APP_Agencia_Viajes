@@ -1,18 +1,49 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API_BASE_URL from "../../apiConfig";
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Cambiar a `false` si el usuario no está autenticado
-  const user = {
-    name: "Carlos",
-    profileImage: "https://v0.dev/placeholder.svg?height=32&width=32",
-  };
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar si el usuario está autenticado
+  const [user, setUser] = useState(null); // Estado para almacenar los datos del usuario
   const navigate = useNavigate();
 
+  // Obtener los datos del usuario autenticado
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+      if (!token) return; // Si no hay token, no hacer nada
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Enviar el token en los encabezados
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData); // Guardar los datos del usuario en el estado
+          setIsAuthenticated(true); // Marcar al usuario como autenticado
+        } else {
+          // Si el token no es válido, eliminarlo
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos del usuario:", error);
+        localStorage.removeItem("token");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleLogout = () => {
-    // Lógica para cerrar sesión (limpiar tokens, etc.)
+    // Lógica para cerrar sesión
+    localStorage.removeItem("token"); // Eliminar el token del almacenamiento local
     setIsAuthenticated(false); // Cambiar el estado a no autenticado
+    setUser(null); // Limpiar los datos del usuario
     navigate("/"); // Redirigir al usuario a la página Home
   };
 
@@ -66,20 +97,13 @@ const Navbar = () => {
             ) : (
               <li className="nav-item dropdown">
                 <button
-                  className="btn btn-light dropdown-toggle d-flex align-items-center"
+                  className="btn btn-light dropdown-toggle"
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <img
-                    src={user.profileImage}
-                    alt="Perfil"
-                    className="rounded-circle me-2"
-                    width="32"
-                    height="32"
-                  />
-                  <span>{user.name}</span>
+                  <span>{user?.firstName || "Usuario"}</span>
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li>

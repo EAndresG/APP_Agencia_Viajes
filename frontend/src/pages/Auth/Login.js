@@ -70,8 +70,11 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Guardar el token en localStorage o en un estado global
+          // Guardar el token en localStorage
           localStorage.setItem("token", data.token);
+
+          // Emitir el evento authChange
+          window.dispatchEvent(new Event("authChange"));
 
           // Redirigir según el tipo de usuario
           if (data.userType === "guide") {
