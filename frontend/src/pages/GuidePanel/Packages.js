@@ -1,133 +1,68 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import Header from "./components/Header"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import API_BASE_URL from "../../apiConfig";
 
 const Packages = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
-  const [currentPage, setCurrentPage] = useState(1)
-  const packagesPerPage = 5 // Límite de paquetes por página
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const packagesPerPage = 5; // Límite de paquetes por página
 
-  const [packages, setPackages] = useState([
-    {
-      id: 1,
-      name: "Cartagena - Ciudad Amurallada",
-      location: "Colombia",
-      price: 1095,
-      status: "active",
-      featured: true,
-      reservations: 18,
-      rating: 4.9,
-      created: "10 Ene, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 2,
-      name: "San Andrés - All Inclusive",
-      location: "Colombia",
-      price: 1500,
-      status: "active",
-      featured: true,
-      reservations: 15,
-      rating: 4.7,
-      created: "15 Ene, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 3,
-      name: "Medellín - Ciudad de la Eterna Primavera",
-      location: "Colombia",
-      price: 800,
-      status: "active",
-      featured: false,
-      reservations: 9,
-      rating: 4.8,
-      created: "20 Ene, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 4,
-      name: "Santa Marta y Tayrona",
-      location: "Colombia",
-      price: 950,
-      status: "active",
-      featured: false,
-      reservations: 12,
-      rating: 4.5,
-      created: "25 Ene, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 5,
-      name: "Eje Cafetero - Experiencia del Café",
-      location: "Colombia",
-      price: 1200,
-      status: "draft",
-      featured: false,
-      reservations: 0,
-      rating: 0,
-      created: "01 Feb, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 6,
-      name: "Bogotá - Tour Cultural",
-      location: "Colombia",
-      price: 600,
-      status: "inactive",
-      featured: false,
-      reservations: 3,
-      rating: 4.2,
-      created: "05 Feb, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-    {
-      id: 7,
-      name: "Amazonas - Aventura en la Selva",
-      location: "Colombia",
-      price: 1400,
-      status: "active",
-      featured: true,
-      reservations: 20,
-      rating: 4.9,
-      created: "10 Feb, 2025",
-      image: "https://v0.dev/placeholder.svg?height=100&width=150",
-    },
-  ])
+  const [packages, setPackages] = useState([]); // Estado inicial vacío para los paquetes
+
+  // Obtener los paquetes desde el backend
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages`); // Solicitud al backend
+        if (!response.ok) {
+          throw new Error("Error al obtener los paquetes");
+        }
+        const data = await response.json();
+        setPackages(data); // Guardar los paquetes en el estado
+      } catch (error) {
+        console.error("Error al cargar los paquetes:", error);
+        alert("No se pudieron cargar los paquetes.");
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   // Filtrar paquetes según búsqueda y estado
   const filteredPackages = packages.filter((pkg) => {
     const matchesSearch =
       pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pkg.location.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === "all" || pkg.status === filterStatus
+      pkg.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === "all" || pkg.status === filterStatus;
 
-    return matchesSearch && matchesStatus
-  })
+    return matchesSearch && matchesStatus;
+  });
 
   // Calcular paquetes para la página actual
-  const indexOfLastPackage = currentPage * packagesPerPage
-  const indexOfFirstPackage = indexOfLastPackage - packagesPerPage
-  const currentPackages = filteredPackages.slice(indexOfFirstPackage, indexOfLastPackage)
+  const indexOfLastPackage = currentPage * packagesPerPage;
+  const indexOfFirstPackage = indexOfLastPackage - packagesPerPage;
+  const currentPackages = filteredPackages.slice(indexOfFirstPackage, indexOfLastPackage);
 
   // Calcular el número total de páginas
-  const totalPages = Math.ceil(filteredPackages.length / packagesPerPage)
+  const totalPages = Math.ceil(filteredPackages.length / packagesPerPage);
 
   // Cambiar de página
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   // Función para eliminar un paquete de la lista
   const handleDeletePackage = (id) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este paquete?")
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este paquete?");
     if (confirmDelete) {
-      setPackages(packages.filter((pkg) => pkg.id !== id))
+      setPackages(packages.filter((pkg) => pkg.id !== id));
     }
-  }
+  };
 
   return (
     <div className="d-flex">
@@ -238,7 +173,7 @@ const Packages = () => {
                               <i className="bi bi-pencil"></i>
                             </Link>
                             <Link
-                              to={`/guide/packages/details/${pkg.id}`} // Cambiado para redirigir a PackageDetails
+                              to={`/guide/packages/details/${pkg.id}`}
                               target="_blank"
                               className="btn btn-sm btn-outline-secondary"
                             >
@@ -308,7 +243,7 @@ const Packages = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Packages
+export default Packages;

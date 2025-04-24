@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../apiConfig";
 
 const Packages = () => {
   const navigate = useNavigate();
 
+  const [packages, setPackages] = useState([]); // Estado para almacenar los paquetes desde el backend
   const [priceRange, setPriceRange] = useState(5000);
   const [searchDestination, setSearchDestination] = useState("");
   const [sortOption, setSortOption] = useState("");
@@ -15,70 +17,25 @@ const Packages = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const packagesPerPage = 6; // Número de paquetes por página
 
-  // Datos de ejemplo para los paquetes
-  const packages = [
-    {
-      id: 1,
-      name: "Cartagena",
-      location: "Colombia",
-      price: 700,
-      rating: 4.8,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["PLAYA", "CULTURAL", "RELAX"],
-      description: "Disfruta de las hermosas playas y la rica historia colonial de esta joya del Caribe colombiano.",
-    },
-    {
-      id: 2,
-      name: "San Andrés",
-      location: "Colombia",
-      price: 500,
-      rating: 4.5,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["PLAYA", "RELAX", "AVENTURA"],
-      description: "Paraíso caribeño con aguas cristalinas perfectas para el buceo y deportes acuáticos.",
-    },
-    {
-      id: 3,
-      name: "Medellín",
-      location: "Colombia",
-      price: 400,
-      rating: 4.7,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["URBANO", "CULTURAL", "NATURALEZA"],
-      description: "La ciudad de la eterna primavera te espera con su clima perfecto y su vibrante cultura.",
-    },
-    {
-      id: 4,
-      name: "Santa Marta",
-      location: "Colombia",
-      price: 1200,
-      rating: 4.9,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["PLAYA", "AVENTURA", "NATURALEZA"],
-      description: "Descubre la magia donde la Sierra Nevada se encuentra con el mar Caribe.",
-    },
-    {
-      id: 5,
-      name: "Eje Cafetero",
-      location: "Colombia",
-      price: 1500,
-      rating: 4.6,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["NATURALEZA", "CULTURAL", "GASTRONOMÍA"],
-      description: "Sumérgete en la cultura del café colombiano entre montañas y paisajes verdes.",
-    },
-    {
-      id: 6,
-      name: "Bogotá",
-      location: "Colombia",
-      price: 730,
-      rating: 4.4,
-      image: "https://v0.dev/placeholder.svg?height=300&width=400",
-      tags: ["URBANO", "CULTURAL", "GASTRONOMÍA"],
-      description: "La capital colombiana te ofrece una mezcla única de historia, arte y modernidad.",
-    },
-    // Agrega más paquetes para probar la paginación
-  ];
+  // Obtener los paquetes desde el backend
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages`); // Solicitud al backend
+        if (!response.ok) {
+          throw new Error("Error al obtener los paquetes");
+        }
+        const data = await response.json();
+        console.log("Paquetes obtenidos:", data); // Verificar los datos en la consola
+        setPackages(data); // Guardar los paquetes en el estado
+      } catch (error) {
+        console.error("Error al cargar los paquetes:", error);
+        alert("No se pudieron cargar los paquetes.");
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   // Filtrar paquetes según los criterios seleccionados
   const handleFilter = () => {
@@ -103,9 +60,10 @@ const Packages = () => {
     setCurrentPage(1); // Reiniciar a la primera página después de aplicar filtros
   };
 
-  // Redirigir a la página de detalles del paquete
-  const handlePackageClick = (id) => {
-    navigate(`/package/${id}`);
+  // Redirigir a la página de reserva
+  const handleReserve = (id) => {
+    alert(`Reserva generada para el paquete con ID: ${id}`);
+    // Aquí puedes implementar la lógica para manejar la reserva
   };
 
   // Obtener los paquetes para la página actual
@@ -199,21 +157,17 @@ const Packages = () => {
           <div className="row g-4">
             {currentPackages.map((pkg) => (
               <div key={pkg.id} className="col-md-6 col-lg-4">
-                <div
-                  className="card h-100 border-0 shadow-sm package-card"
-                  onClick={() => handlePackageClick(pkg.id)}
-                  style={{ cursor: "pointer" }}
-                >
+                <div className="card h-100 border-0 shadow-sm package-card" style={{ cursor: "pointer" }}>
                   <div className="position-relative">
                     <img
-                      src={pkg.image || "/placeholder.svg"}
+                      src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
                       className="card-img-top"
                       alt={pkg.name}
                       style={{ height: "200px", objectFit: "cover" }}
                     />
                     <div className="position-absolute top-0 end-0 bg-warning text-white m-2 px-2 py-1 rounded-pill">
                       <i className="bi bi-star-fill me-1"></i>
-                      <small>{pkg.rating}</small>
+                      <small>{pkg.rating || "N/A"}</small>
                     </div>
                   </div>
                   <div className="card-body">
@@ -225,14 +179,13 @@ const Packages = () => {
                       <i className="bi bi-geo-alt me-1"></i>
                       {pkg.location}
                     </p>
-                    <div className="mb-3">
-                      {pkg.tags.map((tag, index) => (
-                        <span key={index} className="badge bg-light text-dark me-1">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
                     <p className="card-text small">{pkg.description}</p>
+                    <button
+                      className="btn btn-success w-100 mt-3"
+                      onClick={() => handleReserve(pkg.id)}
+                    >
+                      Reservar
+                    </button>
                   </div>
                 </div>
               </div>

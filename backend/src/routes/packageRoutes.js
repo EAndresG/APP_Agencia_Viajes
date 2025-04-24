@@ -4,9 +4,12 @@ const verifyToken = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
+// Rutas públicas (visibles para todos)
+router.get('/', getPackages); // Ruta para obtener todos los paquetes
+router.get('/:id', getPackageById); // Ruta para obtener un paquete por ID
+
+// Rutas protegidas (solo para guías o administradores)
 router.post('/', verifyToken, createPackage); // Ruta para crear un paquete
-router.get('/', verifyToken, getPackages); // Ruta para obtener todos los paquetes
-router.get('/:id', verifyToken, getPackageById); // Ruta para obtener un paquete por ID
 router.put('/:id', verifyToken, updatePackage); // Ruta para actualizar un paquete
 router.delete('/:id', verifyToken, deletePackage); // Ruta para eliminar un paquete
 
