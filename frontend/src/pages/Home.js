@@ -1,8 +1,31 @@
-import Navbar from "../components/Navbar/Navbar"
-import Footer from "../components/Footer/Footer"
-import { Link } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
+import { Link } from "react-router-dom";
+import API_BASE_URL from "../apiConfig";
 
 const Home = () => {
+  const [packages, setPackages] = useState([]); // Estado para almacenar los paquetes
+
+  // Obtener los paquetes desde el backend
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/packages`);
+        if (response.ok) {
+          const data = await response.json();
+          setPackages(data); // Guardar los paquetes en el estado
+        } else {
+          console.error("Error al obtener los paquetes");
+        }
+      } catch (error) {
+        console.error("Error al conectar con el backend:", error);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -136,188 +159,42 @@ const Home = () => {
         <div className="container">
           <h2 className="text-center mb-5 display-6">Paquetes de viajes</h2>
           <div className="row g-4">
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="row g-0">
-                  <div className="col-md-5">
-                    <div className="position-relative h-100">
-                      <img
-                        src="https://v0.dev/placeholder.svg?height=300&width=300"
-                        className="img-fluid h-100 w-100 object-fit-cover"
-                        alt="Thula 5"
-                      />
-                      <div className="position-absolute bottom-0 start-0 p-3">
-                        <div className="d-flex gap-2">
-                          <span className="badge bg-light text-dark">Wifi</span>
-                          <span className="badge bg-light text-dark">Piscina</span>
-                          <span className="badge bg-light text-dark">Spa</span>
-                        </div>
+            {packages.slice(0, 4).map((pkg) => ( // Limitar a 4 paquetes
+              <div key={pkg.id} className="col-lg-6">
+                <div className="card border-0 shadow-sm mb-4">
+                  <div className="row g-0">
+                    <div className="col-md-5">
+                      <div className="position-relative h-100">
+                        <img
+                          src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
+                          className="img-fluid h-100 w-100 object-fit-cover"
+                          alt={pkg.name}
+                        />
                       </div>
                     </div>
-                  </div>
-                  <div className="col-md-7">
-                    <div className="card-body p-4">
-                      <h5 className="card-title mb-3">Thula 5</h5>
-                      <p className="card-text">
-                        Thula 5 se encuentra en la playa, a solo 5 km del centro, donde encontrarás tiendas y
-                        restaurantes locales.
-                      </p>
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
+                    <div className="col-md-7">
+                      <div className="card-body p-4">
+                        <h5 className="card-title mb-3">{pkg.name}</h5>
+                        <p className="card-text">{pkg.description}</p>
+                        {/* Ubicación */}
+                        <div className="d-flex align-items-center mb-3">
+                          <i className="bi bi-geo-alt text-primary me-2"></i>
+                          <small className="text-muted">{pkg.location || "Ubicación no disponible"}</small>
                         </div>
-                        <small className="text-muted">5.0 (32 reseñas)</small>
+                        <Link to={`/packages/${pkg.id}`} className="btn btn-primary">
+                          Reservar ahora
+                        </Link>
                       </div>
-                      <Link to="/PackageDetail" className="btn btn-primary">
-                        Reservar ahora
-                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="row g-0">
-                  <div className="col-md-5">
-                    <div className="position-relative h-100">
-                      <img
-                        src="https://v0.dev/placeholder.svg?height=300&width=300"
-                        className="img-fluid h-100 w-100 object-fit-cover"
-                        alt="Montage Kapalua"
-                      />
-                      <div className="position-absolute bottom-0 start-0 p-3">
-                        <div className="d-flex gap-2">
-                          <span className="badge bg-light text-dark">Wifi</span>
-                          <span className="badge bg-light text-dark">Piscina</span>
-                          <span className="badge bg-light text-dark">Spa</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-7">
-                    <div className="card-body p-4">
-                      <h5 className="card-title mb-3">Montage Kapalua</h5>
-                      <p className="card-text">
-                        Ubicado junto a una playa privada, este resort de lujo ofrece vistas panorámicas al océano.
-                      </p>
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                        </div>
-                        <small className="text-muted">5.0 (48 reseñas)</small>
-                      </div>
-                      <Link to="/articulo" className="btn btn-primary">
-                        Reservar ahora
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="row g-0">
-                  <div className="col-md-5">
-                    <div className="position-relative h-100">
-                      <img
-                        src="https://v0.dev/placeholder.svg?height=300&width=300"
-                        className="img-fluid h-100 w-100 object-fit-cover"
-                        alt="Casa Del Agua"
-                      />
-                      <div className="position-absolute bottom-0 start-0 p-3">
-                        <div className="d-flex gap-2">
-                          <span className="badge bg-light text-dark">Wifi</span>
-                          <span className="badge bg-light text-dark">Piscina</span>
-                          <span className="badge bg-light text-dark">Spa</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-7">
-                    <div className="card-body p-4">
-                      <h5 className="card-title mb-3">Casa Del Agua</h5>
-                      <p className="card-text">
-                        Esta villa frente al mar cuenta con una piscina privada y acceso directo a la playa.
-                      </p>
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                        </div>
-                        <small className="text-muted">5.0 (27 reseñas)</small>
-                      </div>
-                      <Link to="/articulo" className="btn btn-primary">
-                        Reservar ahora
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm mb-4">
-                <div className="row g-0">
-                  <div className="col-md-5">
-                    <div className="position-relative h-100">
-                      <img
-                        src="https://v0.dev/placeholder.svg?height=300&width=300"
-                        className="img-fluid h-100 w-100 object-fit-cover"
-                        alt="Casa Jaguar"
-                      />
-                      <div className="position-absolute bottom-0 start-0 p-3">
-                        <div className="d-flex gap-2">
-                          <span className="badge bg-light text-dark">Wifi</span>
-                          <span className="badge bg-light text-dark">Piscina</span>
-                          <span className="badge bg-light text-dark">Spa</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-7">
-                    <div className="card-body p-4">
-                      <h5 className="card-title mb-3">Casa Jaguar</h5>
-                      <p className="card-text">
-                        Rodeada de exuberante vegetación tropical, esta villa ofrece privacidad y lujo en un entorno
-                        natural.
-                      </p>
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                          <i className="bi bi-star-fill text-warning"></i>
-                        </div>
-                        <small className="text-muted">5.0 (19 reseñas)</small>
-                      </div>
-                      <Link to="/articulo" className="btn btn-primary">
-                        Reservar ahora
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-
+          {/* Botón para ver todos los paquetes */}
           <div className="text-center mt-4">
-            <Link to="/packages" className="btn btn-outline-primary px-4 py-2">
-              Ver todos los paquetes <i className="bi bi-arrow-right ms-2"></i>
+            <Link to="/packages" className="btn btn-outline-primary">
+              Ver todos los paquetes
             </Link>
           </div>
         </div>
@@ -366,7 +243,7 @@ const Home = () => {
 
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

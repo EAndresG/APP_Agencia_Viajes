@@ -47,10 +47,39 @@ const UserProfile = () => {
     fetchUserData();
   }, [navigate]);
 
-  const handleSaveChanges = () => {
-    // Aquí puedes enviar los datos actualizados al backend
-    console.log("Datos guardados:", { name, phone });
-    alert("Cambios guardados correctamente.");
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+    if (!token) {
+      alert("No estás autenticado. Por favor, inicia sesión.");
+      return;
+    }
+
+    try {
+      const [firstName, lastName] = name.split(" "); // Dividir el nombre completo en nombre y apellido
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Enviar el token en los encabezados
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          phone,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser(updatedUser.user); // Actualizar el estado con los datos del usuario
+        alert("Información actualizada correctamente.");
+      } else {
+        alert("Error al actualizar la información.");
+      }
+    } catch (error) {
+      console.error("Error al conectar con el backend:", error);
+      alert("Error al actualizar la información.");
+    }
   };
 
   const handleDeleteReservation = (id) => {

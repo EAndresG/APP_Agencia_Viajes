@@ -24,18 +24,24 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { firstName, lastName, email, phone } = req.body;
+    const userId = req.user.id; // ID del usuario autenticado
+    const { firstName, lastName, phone } = req.body; // Datos enviados desde el frontend
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    await user.update({ firstName, lastName, email, phone });
-    res.status(200).json({ message: 'Usuario actualizado con éxito', user });
+    // Actualizar los datos del usuario
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.phone = phone || user.phone;
+    await user.save();
+
+    res.status(200).json({ message: 'Usuario actualizado correctamente', user });
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el usuario', error });
+    console.error('Error al actualizar el usuario:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
