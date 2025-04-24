@@ -33,14 +33,10 @@ const Packages = () => {
     fetchPackages();
   }, []);
 
-  // Filtrar paquetes según búsqueda y estado
+  // Filtrar paquetes según búsqueda
   const filteredPackages = packages.filter((pkg) => {
-    const matchesSearch =
-      pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pkg.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === "all" || pkg.status === filterStatus;
-
-    return matchesSearch && matchesStatus;
+    return pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           pkg.location.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   // Calcular paquetes para la página actual
@@ -57,10 +53,28 @@ const Packages = () => {
   };
 
   // Función para eliminar un paquete de la lista
-  const handleDeletePackage = (id) => {
+  const handleDeletePackage = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este paquete?");
     if (confirmDelete) {
-      setPackages(packages.filter((pkg) => pkg.id !== id));
+      try {
+        const token = localStorage.getItem("token"); // Obtén el token del almacenamiento local
+        const response = await fetch(`${API_BASE_URL}/packages/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Incluye el token en la cabecera
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Error al eliminar el paquete");
+        }
+        // Eliminar el paquete del estado local
+        setPackages(packages.filter((pkg) => pkg.id !== id));
+        alert("Paquete eliminado correctamente.");
+      } catch (error) {
+        console.error("Error al eliminar el paquete:", error);
+        alert("No se pudo eliminar el paquete.");
+      }
     }
   };
 
@@ -90,17 +104,6 @@ const Packages = () => {
                   </div>
                 </div>
                 <div className="col-md-6 d-flex justify-content-md-end">
-                  <select
-                    className="form-select me-2"
-                    style={{ width: "auto" }}
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                  >
-                    <option value="all">Todos los estados</option>
-                    <option value="active">Activos</option>
-                    <option value="draft">Borradores</option>
-                    <option value="inactive">Inactivos</option>
-                  </select>
                   <Link to="/guide/packages/create" className="btn btn-primary">
                     <i className="bi bi-plus-lg me-1"></i> Nuevo Paquete
                   </Link>
@@ -114,10 +117,6 @@ const Packages = () => {
                     <tr>
                       <th>Paquete</th>
                       <th>Precio</th>
-                      <th>Estado</th>
-                      <th>Reservas</th>
-                      <th>Calificación</th>
-                      <th>Creado</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -143,41 +142,12 @@ const Packages = () => {
                         </td>
                         <td>${pkg.price}</td>
                         <td>
-                          <span
-                            className={`badge ${
-                              pkg.status === "active"
-                                ? "bg-success"
-                                : pkg.status === "draft"
-                                ? "bg-secondary"
-                                : "bg-danger"
-                            }`}
-                          >
-                            {pkg.status === "active" ? "Activo" : pkg.status === "draft" ? "Borrador" : "Inactivo"}
-                          </span>
-                        </td>
-                        <td>{pkg.reservations}</td>
-                        <td>
-                          {pkg.rating > 0 ? (
-                            <div className="d-flex align-items-center">
-                              <i className="bi bi-star-fill text-warning me-1"></i>
-                              <span>{pkg.rating}</span>
-                            </div>
-                          ) : (
-                            <span className="text-muted">Sin reseñas</span>
-                          )}
-                        </td>
-                        <td>{pkg.created}</td>
-                        <td>
                           <div className="btn-group">
+                            <Link to={`/packages`} className="btn btn-sm btn-outline-secondary">
+                              <i className="bi bi-eye"></i>
+                            </Link>
                             <Link to={`/guide/packages/edit/${pkg.id}`} className="btn btn-sm btn-outline-primary">
                               <i className="bi bi-pencil"></i>
-                            </Link>
-                            <Link
-                              to={`/guide/packages/details/${pkg.id}`}
-                              target="_blank"
-                              className="btn btn-sm btn-outline-secondary"
-                            >
-                              <i className="bi bi-eye"></i>
                             </Link>
                             <button
                               className="btn btn-sm btn-outline-danger"

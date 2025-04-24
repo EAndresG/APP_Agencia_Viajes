@@ -70,7 +70,7 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Guardar el token en localStorage
+          // Ejemplo de almacenamiento del token al iniciar sesión
           localStorage.setItem("token", data.token);
 
           // Emitir el evento authChange
