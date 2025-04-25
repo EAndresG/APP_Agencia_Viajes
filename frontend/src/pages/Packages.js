@@ -1,20 +1,23 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../apiConfig";
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import Navbar from "../components/Navbar/Navbar"; // Componente de la barra de navegación
+import Footer from "../components/Footer/Footer"; // Componente del pie de página
+import { useNavigate } from "react-router-dom"; // Navegación entre rutas
+import API_BASE_URL from "../apiConfig"; // URL base del backend
 
+// Componente principal para mostrar y gestionar los paquetes turísticos
 const Packages = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook para redirigir al usuario
 
-  const [packages, setPackages] = useState([]); // Estado para almacenar los paquetes desde el backend
-  const [priceRange, setPriceRange] = useState(5000);
-  const [searchDestination, setSearchDestination] = useState("");
-  const [sortOption, setSortOption] = useState("");
-  const [filteredPackages, setFilteredPackages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  // Estados para manejar datos, filtros y paginación
+  const [packages, setPackages] = useState([]); // Lista de paquetes obtenidos del backend
+  const [priceRange, setPriceRange] = useState(5000); // Rango de precio máximo
+  const [searchDestination, setSearchDestination] = useState(""); // Destino buscado
+  const [sortOption, setSortOption] = useState(""); // Opción de ordenamiento
+  const [filteredPackages, setFilteredPackages] = useState([]); // Lista de paquetes filtrados
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
   const packagesPerPage = 6; // Número de paquetes por página
 
   // Obtener los paquetes desde el backend
@@ -26,6 +29,7 @@ const Packages = () => {
           throw new Error("Error al obtener los paquetes");
         }
         const data = await response.json();
+        console.log("Paquetes obtenidos:", data); // Verificar los datos en la consola
         setPackages(data); // Guardar los paquetes en el estado
       } catch (error) {
         console.error("Error al cargar los paquetes:", error);
@@ -59,6 +63,20 @@ const Packages = () => {
     setCurrentPage(1); // Reiniciar a la primera página después de aplicar filtros
   };
 
+  // Redirigir a Facebook y actualizar el contador de reservas
+  const handleReserve = (pkg) => {
+    const facebookUrl = "https://www.facebook.com";
+    window.open(facebookUrl, "_blank"); // Abrir Facebook en una nueva pestaña
+
+    // Incrementar el contador de reservas en localStorage
+    const currentCount = parseInt(localStorage.getItem("totalReservations") || "0", 10);
+    localStorage.setItem("totalReservations", currentCount + 1);
+
+    // Sumar el precio del paquete a las ganancias totales en localStorage
+    const currentEarnings = parseFloat(localStorage.getItem("totalEarnings") || "0");
+    localStorage.setItem("totalEarnings", currentEarnings + pkg.price);
+  };
+
   // Obtener los paquetes para la página actual
   const indexOfLastPackage = currentPage * packagesPerPage;
   const indexOfFirstPackage = indexOfLastPackage - packagesPerPage;
@@ -72,7 +90,7 @@ const Packages = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar /> {/* Barra de navegación */}
 
       {/* Hero Banner */}
       <section className="position-relative">
@@ -95,7 +113,7 @@ const Packages = () => {
         </div>
       </section>
 
-      {/* Search Filters */}
+      {/* Filtros de búsqueda */}
       <section className="py-5 bg-light">
         <div className="container">
           <div className="card shadow border-0 mb-5">
@@ -133,7 +151,6 @@ const Packages = () => {
                     <option value="">Seleccionar</option>
                     <option value="priceAsc">Precio: Más barato</option>
                     <option value="priceDesc">Precio: Más caro</option>
-                    <option value="rating">Mejor calificación</option>
                     <option value="name">Nombre</option>
                   </select>
                 </div>
@@ -146,22 +163,18 @@ const Packages = () => {
             </div>
           </div>
 
-          {/* Packages Grid */}
+          {/* Grid de paquetes */}
           <div className="row g-4">
             {currentPackages.map((pkg) => (
               <div key={pkg.id} className="col-md-6 col-lg-4">
                 <div className="card h-100 border-0 shadow-sm package-card" style={{ cursor: "pointer" }}>
                   <div className="position-relative">
                     <img
-                      src={pkg.image} // Usar directamente la URL de la imagen enviada por el backend
+                      src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
                       className="card-img-top"
                       alt={pkg.name}
                       style={{ height: "200px", objectFit: "cover" }}
                     />
-                    <div className="position-absolute top-0 end-0 bg-warning text-white m-2 px-2 py-1 rounded-pill">
-                      <i className="bi bi-star-fill me-1"></i>
-                      <small>{pkg.rating || "N/A"}</small>
-                    </div>
                   </div>
                   <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-2">
@@ -185,7 +198,7 @@ const Packages = () => {
             ))}
           </div>
 
-          {/* Pagination */}
+          {/* Paginación */}
           <div className="d-flex justify-content-center mt-4">
             <nav>
               <ul className="pagination">
@@ -208,9 +221,9 @@ const Packages = () => {
         </div>
       </section>
 
-      <Footer />
+      <Footer /> {/* Pie de página */}
     </>
   );
 };
 
-export default Packages;
+export default Packages; // Exportar el componente para usarlo en otras partes de la aplicación

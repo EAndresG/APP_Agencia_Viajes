@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Packages from './pages/Packages';
-import Articulo from './pages/Articulo';
-import PackageDetail from "./pages/PackageDetail";
+import PackageDetail from "./pages/PackageDetail"; //actualmente no disponible
 import UserProfile from "./pages/UserProfile";
-import Contact from './pages/Contact';  
+import Contact from './pages/Contact';  //actualmente no disponible
 import Article1 from './pages/Article/Article1'
 import Article2 from './pages/Article/Article2'
 import Article3 from './pages/Article/Article3'
@@ -48,10 +47,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/packages" element={<Packages />} />
-        <Route path="/Articulo" element={<Articulo />}/>
         <Route path="/PackageDetail" element={<PackageDetail />} />
         <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} /> //actualmente no disponible
         <Route path="/article1" element={<Article1 />} />
         <Route path="/article2" element={<Article2 />} />
         <Route path="/article3" element={<Article3 />} />

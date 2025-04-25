@@ -1,15 +1,17 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import Sidebar from "./components/AdminSidebar";
-import Header from "./components/AdminHeader";
-import API_BASE_URL from "../../apiConfig"; // Asegúrate de que esta URL esté configurada correctamente
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Link, useParams, useNavigate } from "react-router-dom"; // Navegación entre rutas
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+import API_BASE_URL from "../../apiConfig"; // URL base de la API
 
+// Componente principal para crear o editar paquetes
 const PackageForm = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const isEditing = !!id;
+  const { id } = useParams(); // Obtener el ID del paquete desde la URL
+  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const isEditing = !!id; // Determinar si estamos editando un paquete existente
 
   // Estado para el formulario
   const [formData, setFormData] = useState({
@@ -164,10 +166,10 @@ const PackageForm = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Menú lateral */}
 
       <div className="flex-grow-1">
-        <Header title={isEditing ? "Editar Paquete" : "Crear Nuevo Paquete"} />
+        <Header title={isEditing ? "Editar Paquete" : "Crear Nuevo Paquete"} /> {/* Encabezado */}
 
         <div className="container-fluid px-4 py-4">
           <form onSubmit={handleSubmit}>
@@ -179,6 +181,7 @@ const PackageForm = () => {
                     <h5 className="mb-0">Información Básica</h5>
                   </div>
                   <div className="card-body">
+                    {/* Campos del formulario */}
                     <div className="mb-3">
                       <label htmlFor="name" className="form-label">
                         Nombre del Paquete *
@@ -450,4 +453,4 @@ const PackageForm = () => {
   );
 };
 
-export default PackageForm;
+export default PackageForm; // Exportar el componente para usarlo en otras partes de la aplicación

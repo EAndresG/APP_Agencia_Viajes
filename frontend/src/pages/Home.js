@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-import { Link } from "react-router-dom";
-import API_BASE_URL from "../apiConfig";
+// Importar dependencias necesarias
+import React, { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import Navbar from "../components/Navbar/Navbar"; // Componente de la barra de navegación
+import Footer from "../components/Footer/Footer"; // Componente del pie de página
+import { Link } from "react-router-dom"; // Navegación entre rutas
+import API_BASE_URL from "../apiConfig"; // URL base del backend
 
+// Componente principal para la página de inicio
 const Home = () => {
   const [packages, setPackages] = useState([]); // Estado para almacenar los paquetes
 
@@ -28,7 +30,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar /> {/* Barra de navegación */}
 
       {/* Hero Banner */}
       <section className="position-relative">
@@ -49,7 +51,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Search Form Overlay */}
+        {/* Formulario de búsqueda */}
         <div className="container position-relative">
           <div
             className="card shadow position-absolute start-50 translate-middle"
@@ -95,11 +97,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Vacation Ideas */}
+      {/* Ideas para vacaciones */}
       <section className="py-5 mt-5 bg-light">
         <div className="container pt-5">
           <h2 className="text-center mb-5 display-6">Descubre ideas para tus vacaciones</h2>
           <div className="row g-4">
+            {/* Artículo 1 */}
             <div className="col-md-4">
               <Link to="/article1" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
@@ -120,6 +123,8 @@ const Home = () => {
                 </div>
               </Link>
             </div>
+
+            {/* Artículo 2 */}
             <div className="col-md-4">
               <Link to="/article2" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
@@ -140,6 +145,8 @@ const Home = () => {
                 </div>
               </Link>
             </div>
+
+            {/* Artículo 3 */}
             <div className="col-md-4">
               <Link to="/article3" className="text-decoration-none">
                 <div className="card border-0 shadow-sm h-100 overflow-hidden vacation-card">
@@ -164,19 +171,22 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Recent Locations */}
+      {/* Paquetes de viajes */}
       <section className="py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-5 display-6">Paquetes de viajes</h2>
           <div className="row g-4">
-            {packages.slice(0, 4).map((pkg) => ( // Limitar a 4 paquetes
+            {packages.slice(0, 4).map((pkg) => (
               <div key={pkg.id} className="col-lg-6">
                 <div className="card border-0 shadow-sm mb-4">
                   <div className="row g-0">
                     <div className="col-md-5">
                       <div className="position-relative h-100">
                         <img
-                          src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
+                          src={
+                            pkg.image ||
+                            "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"
+                          }
                           className="img-fluid h-100 w-100 object-fit-cover"
                           alt={pkg.name}
                         />
@@ -186,7 +196,6 @@ const Home = () => {
                       <div className="card-body p-4">
                         <h5 className="card-title mb-3">{pkg.name}</h5>
                         <p className="card-text">{pkg.description}</p>
-                        {/* Ubicación */}
                         <div className="d-flex align-items-center mb-3">
                           <i className="bi bi-geo-alt text-primary me-2"></i>
                           <small className="text-muted">{pkg.location || "Ubicación no disponible"}</small>
@@ -201,7 +210,6 @@ const Home = () => {
               </div>
             ))}
           </div>
-          {/* Botón para ver todos los paquetes */}
           <div className="text-center mt-4">
             <Link to="/packages" className="btn btn-outline-primary">
               Ver todos los paquetes
@@ -210,7 +218,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* ¿Por qué elegirnos? */}
       <section className="py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-5 display-6">¿Por qué elegirnos?</h2>
@@ -251,9 +259,9 @@ const Home = () => {
         </div>
       </section>
 
-      <Footer />
+      <Footer /> {/* Pie de página */}
     </>
   );
 };
 
-export default Home;
+export default Home; // Exportar el componente para usarlo en otras partes de la aplicación

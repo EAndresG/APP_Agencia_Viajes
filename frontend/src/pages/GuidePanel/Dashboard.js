@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import API_BASE_URL from "../../apiConfig";
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Link } from "react-router-dom"; // Navegación entre rutas
+import Sidebar from "./components/Sidebar"; // Componente de la barra lateral
+import Header from "./components/Header"; // Componente del encabezado
+import API_BASE_URL from "../../apiConfig"; // URL base del backend
 
+// Componente principal del Dashboard
 const Dashboard = () => {
-  const [totalPackages, setTotalPackages] = useState(0);
-  const [totalReservations, setTotalReservations] = useState(0);
-  const [totalEarnings, setTotalEarnings] = useState(0);
-  const [latestPackages, setLatestPackages] = useState([]);
+  // Estados para almacenar estadísticas y datos
+  const [totalPackages, setTotalPackages] = useState(0); // Total de paquetes
+  const [totalReservations, setTotalReservations] = useState(0); // Total de reservas
+  const [totalEarnings, setTotalEarnings] = useState(0); // Total de ganancias
+  const [latestPackages, setLatestPackages] = useState([]); // Últimos paquetes
 
   // Obtener el número total de paquetes desde el backend
   useEffect(() => {
@@ -56,14 +59,15 @@ const Dashboard = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Barra lateral */}
 
       <div className="flex-grow-1">
-        <Header title="Dashboard" />
+        <Header title="Dashboard" /> {/* Encabezado */}
 
         <div className="container-fluid px-4 py-4">
-          {/* Stats Cards */}
+          {/* Tarjetas de estadísticas */}
           <div className="row g-4 mb-4">
+            {/* Paquetes Totales */}
             <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
@@ -82,6 +86,7 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {/* Reservas Totales */}
             <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
@@ -100,6 +105,7 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {/* Ganancias Totales */}
             <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
@@ -120,7 +126,7 @@ const Dashboard = () => {
           </div>
 
           <div className="row g-4">
-            {/* Latest Packages */}
+            {/* Últimos Paquetes */}
             <div className="col-lg-6">
               <div className="card border-0 shadow-sm">
                 <div className="card-header bg-white py-3">
@@ -179,7 +185,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Acciones Rápidas */}
             <div className="col-lg-4">
               <div className="card border-0 shadow-sm mt-4">
                 <div className="card-header bg-white py-3">
@@ -204,4 +210,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard; // Exportar el componente para usarlo en otras partes de la aplicación

@@ -1,33 +1,40 @@
-"use client"
+/**Esta página esta diseña para una versión mejorada de 
+ * la actual web, agregando funciones nuevas a la dashboard del admin. 
+ * De momento no esta siendo usada en la web*/
 
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import Sidebar from "./components/AdminSidebar"
-import Header from "./components/AdminHeader"
+"use client"; // Indica que este componente se ejecuta en el cliente
 
+// Importar dependencias necesarias
+import { useState } from "react"; // Manejo de estado
+import { Link } from "react-router-dom"; // Navegación entre rutas
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+
+// Componente principal para gestionar reservas
 const Reservations = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
-  const [dateRange, setDateRange] = useState({ start: "", end: "" })
-  const [currentPage, setCurrentPage] = useState(1)
-  const reservationsPerPage = 5 // Límite de reservas por página
+  // Estados para manejar búsqueda, filtros y paginación
+  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda
+  const [filterStatus, setFilterStatus] = useState("all"); // Filtro de estado (todos, confirmadas, pendientes, canceladas)
+  const [dateRange, setDateRange] = useState({ start: "", end: "" }); // Rango de fechas
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
+  const reservationsPerPage = 5; // Límite de reservas por página
 
-  // Datos de ejemplo para las reservas
+  // Datos de ejemplo para las reservas (pueden ser reemplazados con datos dinámicos del backend)
   const [reservations, setReservations] = useState([
     {
       id: 1,
-      packageName: "Cartagena - Ciudad Amurallada",
-      packageId: 1,
-      customerName: "Carlos Rodríguez",
-      customerEmail: "carlos@example.com",
-      customerPhone: "+57 300 123 4567",
-      date: "2025-04-15",
-      endDate: "2025-04-19",
-      people: 2,
-      status: "pending",
-      amount: 1095,
-      paymentMethod: "Tarjeta de crédito",
-      createdAt: "2025-03-10",
+      packageName: "Cartagena - Ciudad Amurallada", // Nombre del paquete
+      packageId: 1, // ID del paquete
+      customerName: "Carlos Rodríguez", // Nombre del cliente
+      customerEmail: "carlos@example.com", // Email del cliente
+      customerPhone: "+57 300 123 4567", // Teléfono del cliente
+      date: "2025-04-15", // Fecha de inicio de la reserva
+      endDate: "2025-04-19", // Fecha de finalización de la reserva
+      people: 2, // Número de personas
+      status: "pending", // Estado de la reserva
+      amount: 1095, // Monto total de la reserva
+      paymentMethod: "Tarjeta de crédito", // Método de pago
+      createdAt: "2025-03-10", // Fecha de creación de la reserva
     },
     {
       id: 2,
@@ -59,37 +66,36 @@ const Reservations = () => {
       paymentMethod: "Efectivo",
       createdAt: "2025-03-15",
     },
-    // Agrega más datos de ejemplo si es necesario
-  ])
+  ]);
 
-  // Filtrar reservas según búsqueda, estado y fechas
+  // Filtrar reservas según búsqueda, estado y rango de fechas
   const filteredReservations = reservations.filter((reservation) => {
     const matchesSearch =
       reservation.packageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       reservation.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reservation.customerEmail.toLowerCase().includes(searchTerm.toLowerCase())
+      reservation.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = filterStatus === "all" || reservation.status === filterStatus
+    const matchesStatus = filterStatus === "all" || reservation.status === filterStatus;
 
     const matchesDateRange =
       (!dateRange.start || new Date(reservation.date) >= new Date(dateRange.start)) &&
-      (!dateRange.end || new Date(reservation.date) <= new Date(dateRange.end))
+      (!dateRange.end || new Date(reservation.date) <= new Date(dateRange.end));
 
-    return matchesSearch && matchesStatus && matchesDateRange
-  })
+    return matchesSearch && matchesStatus && matchesDateRange;
+  });
 
   // Calcular reservas para la página actual
-  const indexOfLastReservation = currentPage * reservationsPerPage
-  const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage
-  const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation)
+  const indexOfLastReservation = currentPage * reservationsPerPage;
+  const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
+  const currentReservations = filteredReservations.slice(indexOfFirstReservation, indexOfLastReservation);
 
   // Calcular el número total de páginas
-  const totalPages = Math.ceil(filteredReservations.length / reservationsPerPage)
+  const totalPages = Math.ceil(filteredReservations.length / reservationsPerPage);
 
   // Cambiar de página
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   // Función para cambiar el estado de una reserva
   const handleChangeStatus = (id, newStatus) => {
@@ -97,26 +103,27 @@ const Reservations = () => {
       prevReservations.map((reservation) =>
         reservation.id === id ? { ...reservation, status: newStatus } : reservation
       )
-    )
-  }
+    );
+  };
 
-  // Función para formatear fecha
+  // Función para formatear fechas
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "short", day: "numeric" }
-    return new Date(dateString).toLocaleDateString("es-ES", options)
-  }
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("es-ES", options);
+  };
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Menú lateral */}
 
       <div className="flex-grow-1">
-        <Header title="Reservas" />
+        <Header title="Reservas" /> {/* Encabezado */}
 
         <div className="container-fluid px-4 py-4">
           <div className="card border-0 shadow-sm">
             <div className="card-header bg-white py-3">
               <div className="row align-items-center">
+                {/* Barra de búsqueda */}
                 <div className="col-md-6 mb-3 mb-md-0">
                   <div className="input-group">
                     <span className="input-group-text bg-white border-end-0">
@@ -131,6 +138,7 @@ const Reservations = () => {
                     />
                   </div>
                 </div>
+                {/* Filtro de estado */}
                 <div className="col-md-6 d-flex justify-content-md-end">
                   <select
                     className="form-select me-2"
@@ -273,7 +281,7 @@ const Reservations = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Reservations
+export default Reservations; // Exportar el componente para usarlo en otras partes de la aplicación

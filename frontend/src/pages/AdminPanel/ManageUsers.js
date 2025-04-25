@@ -1,21 +1,24 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import React, { useState, useEffect } from "react";
-import { Table, Badge, Pagination } from "react-bootstrap";
-import Sidebar from "./components/AdminSidebar";
-import Header from "./components/AdminHeader";
-import API_BASE_URL from "../../apiConfig";
+// Importar dependencias necesarias
+import React, { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Table, Badge, Pagination } from "react-bootstrap"; // Componentes de Bootstrap
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+import API_BASE_URL from "../../apiConfig"; // URL base de la API
 
+// Componente principal para gestionar usuarios
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]); // Estado para almacenar los usuarios
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("all"); // Filtro: all, Usuario, Guía
+  // Estado para almacenar los usuarios obtenidos del backend
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda
+  const [filterRole, setFilterRole] = useState("all"); // Filtro de roles: todos, usuarios, guías, administradores
 
-  const [selectedUser, setSelectedUser] = useState(null); // Estado para la tarjeta flotante de usuarios
+  const [selectedUser, setSelectedUser] = useState(null); // Usuario seleccionado para mostrar detalles
 
-  // Paginación para Usuarios y Guías
-  const [currentPageUsers, setCurrentPageUsers] = useState(1);
-  const usersPerPage = 3;
+  // Paginación
+  const [currentPageUsers, setCurrentPageUsers] = useState(1); // Página actual
+  const usersPerPage = 3; // Número de usuarios por página
 
   // Obtener usuarios desde el backend
   useEffect(() => {
@@ -37,10 +40,10 @@ const ManageUsers = () => {
         setUsers(
           data.map((user) => ({
             id: user.id,
-            name: `${user.firstName} ${user.lastName}`,
-            email: user.email,
-            role: user.userType === "admin" ? "Administrador" : user.userType === "guide" ? "Guía" : "Usuario",
-            status: "Activo", // Puedes ajustar esto según tu lógica
+            name: `${user.firstName} ${user.lastName}`, // Nombre completo del usuario
+            email: user.email, // Correo electrónico
+            role: user.userType === "admin" ? "Administrador" : user.userType === "guide" ? "Guía" : "Usuario", // Rol del usuario
+            status: "Activo", // Estado del usuario (puede ajustarse según la lógica del backend)
           }))
         );
       } catch (error) {
@@ -51,7 +54,7 @@ const ManageUsers = () => {
     fetchUsers();
   }, []);
 
-  // Filtrar usuarios según búsqueda y rol
+  // Filtrar usuarios según el término de búsqueda y el rol seleccionado
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,20 +69,21 @@ const ManageUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
-  const totalPagesUsers = Math.ceil(filteredUsers.length / usersPerPage);
+  const totalPagesUsers = Math.ceil(filteredUsers.length / usersPerPage); // Calcular el número total de páginas
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Menú lateral */}
 
       <div className="flex-grow-1">
-        <Header title="Gestionar Usuarios" />
+        <Header title="Gestionar Usuarios" /> {/* Encabezado */}
 
         <div className="container-fluid px-4 py-4">
           {/* Barra de búsqueda y filtro */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-header bg-white py-3">
               <div className="row align-items-center">
+                {/* Barra de búsqueda */}
                 <div className="col-md-6 mb-3 mb-md-0">
                   <div className="input-group">
                     <span className="input-group-text bg-white border-end-0">
@@ -94,6 +98,7 @@ const ManageUsers = () => {
                     />
                   </div>
                 </div>
+                {/* Filtro de roles */}
                 <div className="col-md-6 d-flex justify-content-md-end">
                   <select
                     className="form-select"
@@ -104,7 +109,7 @@ const ManageUsers = () => {
                     <option value="all">Todos</option>
                     <option value="Usuario">Usuarios</option>
                     <option value="Guía">Guías</option>
-                    <option value="Administrador">Administradores</option> {/* Nueva opción */}
+                    <option value="Administrador">Administradores</option>
                   </select>
                 </div>
               </div>
@@ -162,4 +167,4 @@ const ManageUsers = () => {
   );
 };
 
-export default ManageUsers;
+export default ManageUsers; // Exportar el componente para usarlo en otras partes de la aplicación

@@ -1,28 +1,31 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../apiConfig"; // Importar la URL base del backend
-import "./Auth.css";
+// Importar dependencias necesarias
+import { useState } from "react"; // Manejo de estado
+import { Link, useNavigate } from "react-router-dom"; // Navegación entre rutas
+import API_BASE_URL from "../../apiConfig"; // URL base del backend
+import "./Auth.css"; // Estilos personalizados para la página de autenticación
 
+// Componente principal para el registro de usuarios
 const Register = () => {
-  const navigate = useNavigate();
-  const [userType, setUserType] = useState("user"); // "user" o "guide"
-  const [step, setStep] = useState(1); // Para el formulario de múltiples pasos
+  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const [userType, setUserType] = useState("user"); // Tipo de usuario: "user" o "guide"
+  const [step, setStep] = useState(1); // Paso actual del formulario (1 o 2)
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    description: "",
-    identification: "",
-    acceptTerms: false,
+    firstName: "", // Nombre del usuario
+    lastName: "", // Apellido del usuario
+    email: "", // Correo electrónico
+    password: "", // Contraseña
+    confirmPassword: "", // Confirmación de contraseña
+    phone: "", // Teléfono
+    description: "", // Descripción profesional (solo para guías)
+    identification: "", // Número de identificación (solo para guías)
+    acceptTerms: false, // Aceptación de términos y condiciones
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({}); // Errores de validación del formulario
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga al enviar el formulario
 
+  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -37,6 +40,7 @@ const Register = () => {
     }
   };
 
+  // Validar los campos del paso 1
   const validateStep1 = () => {
     const newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = "El nombre es obligatorio";
@@ -52,6 +56,7 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Validar los campos del paso 2
   const validateStep2 = () => {
     const newErrors = {};
     if (userType === "guide") {
@@ -64,14 +69,17 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Manejar el cambio al siguiente paso
   const handleNextStep = () => {
     if (validateStep1()) setStep(2);
   };
 
+  // Manejar el regreso al paso anterior
   const handlePrevStep = () => {
     setStep(1);
   };
 
+  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,6 +92,7 @@ const Register = () => {
       setIsLoading(true);
 
       try {
+        // Enviar solicitud al backend para registrar al usuario
         const response = await fetch(`${API_BASE_URL}/auth/register`, {
           method: "POST",
           headers: {
@@ -98,7 +107,6 @@ const Register = () => {
             userType,
             acceptTerms: formData.acceptTerms,
             ...(userType === "guide" && {
-              experience: formData.experience,
               description: formData.description,
               identification: formData.identification,
             }),
@@ -131,7 +139,7 @@ const Register = () => {
             <div
               className="auth-image"
               style={{
-                backgroundImage: "url('https://v0.dev/placeholder.svg?height=800&width=600')",
+                backgroundImage: "url('https://www.kayak.com.co/news/wp-content/uploads/sites/180/2018/07/Playas-baratas-en-Mexico-Mahahual.jpg')",
               }}
             >
               <div className="auth-image-overlay">
@@ -180,26 +188,7 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Indicador de pasos */}
-              <div className="steps-indicator mb-4">
-                <div className="row">
-                  <div className="col-6">
-                    <div className={`step ${step === 1 ? "active" : "completed"}`}>
-                      <div className="step-number">1</div>
-                      <div className="step-label">Información Personal</div>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className={`step ${step === 2 ? "active" : ""}`}>
-                      <div className="step-number">2</div>
-                      <div className="step-label">
-                        {userType === "guide" ? "Información Profesional" : "Finalizar Registro"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              {/* Formulario dinámico basado en el paso */}
               <form onSubmit={handleSubmit}>
                 {step === 1 ? (
                   // Paso 1: Información personal
@@ -429,4 +418,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Register; // Exportar el componente para usarlo en otras partes de la aplicación

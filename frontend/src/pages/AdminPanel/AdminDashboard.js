@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./components/AdminSidebar";
-import Header from "./components/AdminHeader";
-import API_BASE_URL from "../../apiConfig";
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Link } from "react-router-dom"; // Navegación entre rutas
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+import API_BASE_URL from "../../apiConfig"; // URL base de la API
 
+// Componente principal del Dashboard del administrador
 const Dashboard = () => {
-  const [totalPackages, setTotalPackages] = useState(0); // Estado para almacenar el número total de paquetes
-  const [totalReservations, setTotalReservations] = useState(0); // Estado para almacenar el número total de reservas
-  const [totalEarnings, setTotalEarnings] = useState(0); // Estado para almacenar las ganancias totales
-  const [latestPackages, setLatestPackages] = useState([]); // Estado para almacenar los últimos paquetes
+  // Estados para almacenar datos del backend
+  const [totalPackages, setTotalPackages] = useState(0); // Número total de paquetes
+  const [totalReservations, setTotalReservations] = useState(0); // Número total de reservas
+  const [totalEarnings, setTotalEarnings] = useState(0); // Ganancias totales
+  const [latestPackages, setLatestPackages] = useState([]); // Últimos paquetes creados
 
   // Obtener el número total de paquetes desde el backend
   useEffect(() => {
@@ -54,15 +57,25 @@ const Dashboard = () => {
     fetchLatestPackages();
   }, []);
 
+  // Función futura: Obtener estadísticas avanzadas
+  // Esta función se implementará en el futuro para mostrar estadísticas más detalladas
+  const fetchAdvancedStats = async () => {
+    // Ejemplo de lógica futura:
+    // const response = await fetch(`${API_BASE_URL}/admin/stats`);
+    // const data = await response.json();
+    // setAdvancedStats(data);
+    console.log("Función para estadísticas avanzadas aún no implementada.");
+  };
+
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Menú lateral */}
 
       <div className="flex-grow-1">
-        <Header title="Dashboard" />
+        <Header title="Dashboard" /> {/* Encabezado del Dashboard */}
 
         <div className="container-fluid px-4 py-4">
-          {/* Stats Cards */}
+          {/* Tarjetas de estadísticas */}
           <div className="row g-4 mb-4">
             <div className="col-xl-4 col-md-6">
               <div className="card border-0 shadow-sm h-100">
@@ -120,7 +133,7 @@ const Dashboard = () => {
           </div>
 
           <div className="row g-4">
-            {/* Latest Packages */}
+            {/* Últimos Paquetes */}
             <div className="col-lg-6">
               <div className="card border-0 shadow-sm">
                 <div className="card-header bg-white py-3">
@@ -179,7 +192,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Acciones Rápidas */}
             <div className="col-lg-4">
               <div className="card border-0 shadow-sm mt-4">
                 <div className="card-header bg-white py-3">
@@ -207,4 +220,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard; // Exportar el componente para usarlo en otras partes de la aplicación

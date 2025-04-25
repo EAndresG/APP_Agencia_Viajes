@@ -1,18 +1,24 @@
-import React, { useState } from "react";
-import { Card, Table, Modal, Button } from "react-bootstrap";
-import Sidebar from "./components/AdminSidebar"
-import Header from "./components/AdminHeader"
+/**Esta página esta diseña para una versión mejorada de 
+ * la actual web, agregando funciones nuevas a la dashboard del admin. 
+ * De momento no esta siendo usada en la web*/
 
+// Importar dependencias necesarias
+import React, { useState } from "react"; // Manejo de estado
+import { Card, Table, Modal, Button } from "react-bootstrap"; // Componentes de Bootstrap
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+
+// Componente principal para gestionar reseñas
 const ResenasPage = () => {
-  // Datos de ejemplo para las reseñas
+  // Datos de ejemplo para las reseñas (pueden ser reemplazados con datos dinámicos del backend)
   const reseñas = [
     {
       id: 1,
-      paquete: "Cartagena - Ciudad Amurallada",
-      cliente: "Carlos Rodríguez",
-      fecha: "10 Abr. 2025",
-      calificacion: 5,
-      comentario: "Excelente experiencia, el hotel superó nuestras expectativas.",
+      paquete: "Cartagena - Ciudad Amurallada", // Nombre del paquete
+      cliente: "Carlos Rodríguez", // Nombre del cliente
+      fecha: "10 Abr. 2025", // Fecha de la reseña
+      calificacion: 5, // Calificación del cliente
+      comentario: "Excelente experiencia, el hotel superó nuestras expectativas.", // Comentario del cliente
     },
     {
       id: 2,
@@ -42,25 +48,25 @@ const ResenasPage = () => {
 
   // Estadísticas de reseñas
   const stats = {
-    total: 47,
-    promedio: 4.3,
-    publicadas: 42,
+    total: 47, // Total de reseñas
+    promedio: 4.3, // Calificación promedio
+    publicadas: 42, // Número de reseñas publicadas
   };
 
-  // Estado para el modal
-  const [selectedReview, setSelectedReview] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  // Estado para manejar el modal
+  const [selectedReview, setSelectedReview] = useState(null); // Reseña seleccionada
+  const [showModal, setShowModal] = useState(false); // Estado del modal
 
   // Función para abrir el modal con los detalles de la reseña
   const handleRowClick = (resena) => {
-    setSelectedReview(resena);
-    setShowModal(true);
+    setSelectedReview(resena); // Guardar la reseña seleccionada
+    setShowModal(true); // Mostrar el modal
   };
 
   // Función para cerrar el modal
   const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedReview(null);
+    setShowModal(false); // Ocultar el modal
+    setSelectedReview(null); // Limpiar la reseña seleccionada
   };
 
   return (
@@ -197,4 +203,4 @@ const ResenasPage = () => {
   );
 };
 
-export default ResenasPage;
+export default ResenasPage; // Exportar el componente para usarlo en otras partes de la aplicación

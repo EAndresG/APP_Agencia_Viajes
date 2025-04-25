@@ -1,18 +1,22 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./components/AdminSidebar";
-import Header from "./components/AdminHeader";
-import API_BASE_URL from "../../apiConfig";
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Link } from "react-router-dom"; // Navegación entre rutas
+import Sidebar from "./components/AdminSidebar"; // Componente del menú lateral
+import Header from "./components/AdminHeader"; // Componente del encabezado
+import API_BASE_URL from "../../apiConfig"; // URL base de la API
 
+// Componente principal para gestionar paquetes
 const Packages = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
+  // Estados para manejar la búsqueda, filtros y paginación
+  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda
+  const [filterStatus, setFilterStatus] = useState("all"); // Filtro de estado (no implementado actualmente)
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
   const packagesPerPage = 5; // Límite de paquetes por página
 
-  const [packages, setPackages] = useState([]); // Estado inicial vacío para los paquetes
+  // Estado para almacenar los paquetes
+  const [packages, setPackages] = useState([]);
 
   // Obtener los paquetes desde el backend
   useEffect(() => {
@@ -33,13 +37,15 @@ const Packages = () => {
     fetchPackages();
   }, []);
 
-  // Filtrar paquetes según búsqueda
+  // Filtrar paquetes según el término de búsqueda
   const filteredPackages = packages.filter((pkg) => {
-    return pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           pkg.location.toLowerCase().includes(searchTerm.toLowerCase());
+    return (
+      pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pkg.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   });
 
-  // Calcular paquetes para la página actual
+  // Calcular los paquetes para la página actual
   const indexOfLastPackage = currentPage * packagesPerPage;
   const indexOfFirstPackage = indexOfLastPackage - packagesPerPage;
   const currentPackages = filteredPackages.slice(indexOfFirstPackage, indexOfLastPackage);
@@ -52,17 +58,17 @@ const Packages = () => {
     setCurrentPage(pageNumber);
   };
 
-  // Función para eliminar un paquete de la lista
+  // Función para eliminar un paquete
   const handleDeletePackage = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este paquete?");
     if (confirmDelete) {
       try {
-        const token = localStorage.getItem("token"); // Obtén el token del almacenamiento local
+        const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
         const response = await fetch(`${API_BASE_URL}/packages/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Incluye el token en la cabecera
+            Authorization: `Bearer ${token}`, // Incluir el token en la cabecera
           },
         });
         if (!response.ok) {
@@ -80,15 +86,16 @@ const Packages = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar /> {/* Menú lateral */}
 
       <div className="flex-grow-1">
-        <Header title="Mis Paquetes" />
+        <Header title="Mis Paquetes" /> {/* Encabezado */}
 
         <div className="container-fluid px-4 py-4">
           <div className="card border-0 shadow-sm">
             <div className="card-header bg-white py-3">
               <div className="row align-items-center">
+                {/* Barra de búsqueda */}
                 <div className="col-md-6 mb-3 mb-md-0">
                   <div className="input-group">
                     <span className="input-group-text bg-white border-end-0">
@@ -103,6 +110,7 @@ const Packages = () => {
                     />
                   </div>
                 </div>
+                {/* Botón para crear un nuevo paquete */}
                 <div className="col-md-6 d-flex justify-content-md-end">
                   <Link to="/admin/packageForm/create" className="btn btn-primary">
                     <i className="bi bi-plus-lg me-1"></i> Nuevo Paquete
@@ -126,7 +134,10 @@ const Packages = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <img
-                              src={pkg.image || "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"}
+                              src={
+                                pkg.image ||
+                                "https://caracol.com.co/resizer/18egm6xhey1MYHQHjQII4yjqtpg=/arc-photo-prisaradioco/arc2-prod/public/7FZMP2BT3VAORPXCB2YTAAERRY.jpg"
+                              }
                               alt={pkg.name}
                               className="rounded me-3"
                               width="60"
@@ -216,4 +227,4 @@ const Packages = () => {
   );
 };
 
-export default Packages;
+export default Packages; // Exportar el componente para usarlo en otras partes de la aplicación

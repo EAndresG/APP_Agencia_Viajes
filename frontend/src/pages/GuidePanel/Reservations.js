@@ -1,3 +1,8 @@
+/**Esta página esta diseña para una versión mejorada de 
+ * la actual web, agregando funciones nuevas a la dashboard del guía. 
+ * De momento no esta siendo usada en la web*/
+
+
 "use client"
 
 import { useState } from "react"

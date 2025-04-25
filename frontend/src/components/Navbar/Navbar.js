@@ -1,11 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import API_BASE_URL from "../../apiConfig";
+// Importar dependencias necesarias
+import { Link, useNavigate } from "react-router-dom"; // Navegación entre rutas
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import API_BASE_URL from "../../apiConfig"; // URL base de la API
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar si el usuario está autenticado
-  const [user, setUser] = useState(null); // Estado para almacenar los datos del usuario
-  const navigate = useNavigate();
+  // Estado para verificar si el usuario está autenticado
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Estado para almacenar los datos del usuario autenticado
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // Hook para redirigir al usuario
 
   // Obtener los datos del usuario autenticado
   useEffect(() => {
@@ -32,15 +35,15 @@ const Navbar = () => {
         }
       } catch (error) {
         console.error("Error al obtener los datos del usuario:", error);
-        localStorage.removeItem("token");
+        localStorage.removeItem("token"); // Eliminar el token en caso de error
       }
     };
 
     fetchUser();
   }, []);
 
+  // Manejar el cierre de sesión
   const handleLogout = () => {
-    // Lógica para cerrar sesión
     localStorage.removeItem("token"); // Eliminar el token del almacenamiento local
     setIsAuthenticated(false); // Cambiar el estado a no autenticado
     setUser(null); // Limpiar los datos del usuario

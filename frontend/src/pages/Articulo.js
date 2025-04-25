@@ -1,3 +1,6 @@
+/** Actualmente no se esta haciendo uso en la web */
+
+
 import Navbar from "../components/Navbar/Navbar"
 import Footer from "../components/Footer/Footer"
 import "./Articulo.css"

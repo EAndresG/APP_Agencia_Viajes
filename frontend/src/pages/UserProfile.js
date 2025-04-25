@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Form } from "react-bootstrap";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../apiConfig";
+// Importar dependencias necesarias
+import React, { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Card, Row, Col, Button, Form } from "react-bootstrap"; // Componentes de Bootstrap
+import Navbar from "../components/Navbar/Navbar"; // Componente de la barra de navegación
+import Footer from "../components/Footer/Footer"; // Componente del pie de página
+import { useNavigate } from "react-router-dom"; // Navegación entre rutas
+import API_BASE_URL from "../apiConfig"; // URL base del backend
 
+// Componente principal para la página de perfil del usuario
 const UserProfile = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook para redirigir al usuario
 
   // Estados para manejar los datos del usuario
-  const [user, setUser] = useState(null);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [user, setUser] = useState(null); // Datos del usuario
+  const [name, setName] = useState(""); // Nombre completo del usuario
+  const [phone, setPhone] = useState(""); // Teléfono del usuario
 
   // Obtener los datos del usuario desde el backend
   useEffect(() => {
@@ -45,6 +47,7 @@ const UserProfile = () => {
     fetchUserData();
   }, [navigate]);
 
+  // Manejar la actualización de los datos del usuario
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
     if (!token) {
@@ -80,13 +83,14 @@ const UserProfile = () => {
     }
   };
 
+  // Mostrar un mensaje mientras se cargan los datos del usuario
   if (!user) {
     return <p className="text-center mt-5">Cargando datos del usuario...</p>;
   }
 
   return (
     <>
-      <Navbar />
+      <Navbar /> {/* Barra de navegación */}
       <div className="container py-5">
         <h1 className="text-center mb-5">Mi Perfil</h1>
         <Row>
@@ -146,9 +150,9 @@ const UserProfile = () => {
           </Col>
         </Row>
       </div>
-      <Footer />
+      <Footer /> {/* Pie de página */}
     </>
   );
 };
 
-export default UserProfile;
+export default UserProfile; // Exportar el componente para usarlo en otras partes de la aplicación

@@ -1,27 +1,30 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../apiConfig"; // Importar la URL base del backend
-import "./Auth.css";
+// Importar dependencias necesarias
+import { useState } from "react"; // Manejo de estado
+import { Link, useNavigate } from "react-router-dom"; // Navegación entre rutas
+import API_BASE_URL from "../../apiConfig"; // URL base del backend
+import "./Auth.css"; // Estilos personalizados para la página de autenticación
 
+// Componente principal para el inicio de sesión
 const Login = () => {
-  const navigate = useNavigate();
-  const [userType, setUserType] = useState("user"); // "user" o "guide"
+  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const [userType, setUserType] = useState("user"); // Tipo de usuario: "user" o "guide"
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "", // Correo electrónico del usuario
+    password: "", // Contraseña del usuario
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({}); // Errores de validación del formulario
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga al enviar el formulario
 
+  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    // Limpiar error cuando el usuario comienza a escribir
+    // Limpiar errores cuando el usuario comienza a escribir
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -30,6 +33,7 @@ const Login = () => {
     }
   };
 
+  // Validar el formulario antes de enviarlo
   const validateForm = () => {
     const newErrors = {};
 
@@ -46,16 +50,18 @@ const Login = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; // Retorna true si no hay errores
   };
 
+  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
 
     if (validateForm()) {
-      setIsLoading(true);
+      setIsLoading(true); // Mostrar estado de carga
 
       try {
+        // Enviar solicitud al backend para iniciar sesión
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: "POST",
           headers: {
@@ -70,10 +76,10 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Ejemplo de almacenamiento del token al iniciar sesión
+          // Guardar el token en el almacenamiento local
           localStorage.setItem("token", data.token);
 
-          // Emitir el evento authChange
+          // Emitir un evento para notificar cambios en la autenticación
           window.dispatchEvent(new Event("authChange"));
 
           // Redirigir según el tipo de usuario
@@ -89,7 +95,7 @@ const Login = () => {
         console.error("Error al iniciar sesión:", error);
         alert("Ocurrió un error al iniciar sesión.");
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Ocultar estado de carga
       }
     }
   };
@@ -103,7 +109,7 @@ const Login = () => {
             <div
               className="auth-image"
               style={{
-                backgroundImage: "url('https://v0.dev/placeholder.svg?height=800&width=600')",
+                backgroundImage: "url('https://irp-cdn.multiscreensite.com/md/unsplash/dms3rep/multi/photo-1544219748-7bad90ba5f7c.jpg')",
               }}
             >
               <div className="auth-image-overlay">
@@ -151,6 +157,7 @@ const Login = () => {
               </div>
 
               <form onSubmit={handleSubmit}>
+                {/* Campo de correo electrónico */}
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     Correo Electrónico
@@ -172,6 +179,7 @@ const Login = () => {
                   </div>
                 </div>
 
+                {/* Campo de contraseña */}
                 <div className="mb-4">
                   <label htmlFor="password" className="form-label">
                     Contraseña
@@ -193,6 +201,7 @@ const Login = () => {
                   </div>
                 </div>
 
+                {/* Botón de inicio de sesión */}
                 <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>
                   {isLoading ? (
                     <>
@@ -235,4 +244,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login; // Exportar el componente para usarlo en otras partes de la aplicación

@@ -1,16 +1,22 @@
-"use client";
+/**Esta página este hecha para enseñar más a detalle los paquetes que se encuentran en la web
+ * de momento no esta uso pensando en una versión mejorada de la web
+ */
 
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
+// Importar dependencias necesarias
+import { useState, useEffect } from "react"; // Manejo de estado y efectos secundarios
+import { Link, useParams, useNavigate } from "react-router-dom"; // Navegación entre rutas y obtención de parámetros
+import Navbar from "../components/Navbar/Navbar"; // Componente de la barra de navegación
+import Footer from "../components/Footer/Footer"; // Componente del pie de página
+
+// Componente principal para mostrar los detalles de un paquete turístico
 const PackageDetail = () => {
   const { id } = useParams(); // Obtener el ID del paquete desde la URL
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook para redirigir al usuario
   const [packageData, setPackageData] = useState(null); // Estado para almacenar los datos del paquete
-  const [activeTab, setActiveTab] = useState("description");
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeTab, setActiveTab] = useState("description"); // Pestaña activa
+  const [activeImage, setActiveImage] = useState(0); // Imagen activa en la galería
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
 
   // Obtener los datos del paquete desde el backend
@@ -35,17 +41,20 @@ const PackageDetail = () => {
     fetchPackage();
   }, [id, navigate]);
 
+  // Mostrar un mensaje mientras se cargan los datos
   if (loading) {
-    return <p className="text-center py-5">Cargando...</p>; // Mostrar un mensaje mientras se cargan los datos
+    return <p className="text-center py-5">Cargando...</p>;
   }
 
+  // Mostrar un mensaje si no se encuentran datos del paquete
   if (!packageData) {
-    return <p className="text-center py-5">No se encontró el paquete.</p>; // Mostrar un mensaje si no hay datos
+    return <p className="text-center py-5">No se encontró el paquete.</p>;
   }
 
   return (
     <>
-      <Navbar />
+      <Navbar /> {/* Barra de navegación */}
+
       <div className="container py-4">
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-4">
@@ -68,7 +77,7 @@ const PackageDetail = () => {
 
         <div className="row">
           <div className="col-lg-8">
-            {/* Image Gallery */}
+            {/* Galería de imágenes */}
             <div className="position-relative mb-4">
               <img
                 src={packageData.images?.[activeImage] || "/placeholder.svg"}
@@ -78,7 +87,7 @@ const PackageDetail = () => {
               />
             </div>
 
-            {/* Package Title and Basic Info */}
+            {/* Título y detalles básicos del paquete */}
             <div className="mb-4">
               <div className="d-flex justify-content-between align-items-start">
                 <div>
@@ -102,7 +111,7 @@ const PackageDetail = () => {
               </div>
             </div>
 
-            {/* Package Features */}
+            {/* Características del paquete */}
             <div className="row g-4 mb-4">
               <div className="col-md-4">
                 <div className="d-flex align-items-center">
@@ -133,7 +142,7 @@ const PackageDetail = () => {
               </div>
             </div>
 
-            {/* Tabs */}
+            {/* Pestañas de contenido */}
             <div className="mb-4">
               <ul className="nav nav-tabs">
                 <li className="nav-item">
@@ -195,9 +204,10 @@ const PackageDetail = () => {
           </div>
         </div>
       </div>
-      <Footer />
+
+      <Footer /> {/* Pie de página */}
     </>
   );
 };
 
-export default PackageDetail;
+export default PackageDetail; // Exportar el componente para usarlo en otras partes de la aplicación

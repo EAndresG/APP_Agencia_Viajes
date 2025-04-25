@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { Card, Row, Col, Badge, Button, Form } from "react-bootstrap";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
+/**Esta página esta diseña para una versión mejorada de 
+ * la actual web, agregando funciones nuevas a la dashboard del guía. 
+ * De momento no esta siendo usada en la web*/
 
+// Importar dependencias necesarias
+import React, { useState } from "react"; // Manejo de estado
+import { Card, Row, Col, Badge, Button, Form } from "react-bootstrap"; // Componentes de Bootstrap
+import Sidebar from "./components/Sidebar"; // Componente de la barra lateral
+import Header from "./components/Header"; // Componente del encabezado
+
+// Componente principal para la página de perfil del guía turístico
 const PerfilPage = () => {
-  // Datos del guía turístico
+  // Datos iniciales del guía turístico
   const guia = {
     nombre: "Carlos Gutiérrez",
     especialidad: "Tours culturales e históricos",
@@ -23,28 +29,34 @@ const PerfilPage = () => {
   const [telefono, setTelefono] = useState(guia.telefono);
   const [idiomas, setIdiomas] = useState(guia.idiomas);
   const [biografia, setBiografia] = useState(guia.biografia);
-  const [foto, setFoto] = useState(guia.foto || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"); // Imagen por defecto
-  const [hover, setHover] = useState(false); // Estado para controlar el hover
+  const [foto, setFoto] = useState(
+    guia.foto || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+  ); // Imagen por defecto
+  const [hover, setHover] = useState(false); // Estado para controlar el hover sobre la foto
 
+  // Función para añadir un nuevo idioma
   const handleAddIdioma = (e) => {
     e.preventDefault();
     const nuevoIdioma = e.target.idioma.value.trim();
     if (nuevoIdioma && !idiomas.includes(nuevoIdioma)) {
       setIdiomas([...idiomas, nuevoIdioma]);
-      e.target.reset();
+      e.target.reset(); // Limpiar el campo de entrada
     }
   };
 
+  // Función para eliminar un idioma
   const handleRemoveIdioma = (idioma) => {
     setIdiomas(idiomas.filter((i) => i !== idioma));
   };
 
+  // Función para guardar los cambios
   const handleSaveChanges = () => {
     // Aquí puedes enviar los datos actualizados al backend
     console.log("Datos guardados:", { especialidad, ubicacion, telefono, idiomas, biografia, foto });
     alert("Cambios guardados correctamente.");
   };
 
+  // Función para cargar una nueva foto de perfil
   const handleUploadPhoto = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -58,11 +70,11 @@ const PerfilPage = () => {
 
   return (
     <div className="d-flex">
-      {/* Sidebar */}
+      {/* Barra lateral */}
       <Sidebar />
 
       <div className="flex-grow-1">
-        {/* Header */}
+        {/* Encabezado */}
         <Header title="Mi Perfil" />
 
         <div className="container-fluid px-4 py-4">
@@ -222,4 +234,4 @@ const PerfilPage = () => {
   );
 };
 
-export default PerfilPage;
+export default PerfilPage; // Exportar el componente para usarlo en otras partes de la aplicación

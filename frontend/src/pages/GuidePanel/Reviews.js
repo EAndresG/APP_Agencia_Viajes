@@ -1,3 +1,7 @@
+/**Esta página esta diseña para una versión mejorada de 
+ * la actual web, agregando funciones nuevas a la dashboard del guia. 
+ * De momento no esta siendo usada en la web*/
+
 import React, { useState } from "react";
 import { Card, Table, Modal, Button } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
