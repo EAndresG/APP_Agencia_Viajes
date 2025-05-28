@@ -1,12 +1,11 @@
 # .nixpacks
-# Define la versión de Node.js a usar.
 [environment]
-NODE_VERSION = "22" # Aquí usamos la versión principal "22"
+NODE_VERSION = "22"
 
-# Define los comandos de construcción para tu backend
+app_dir = "backend" # ¡Esta línea es CLAVE!
+
 [phases.build]
 commands = ["npm install"]
 
-# Define el comando de inicio para tu backend
 [start]
 cmd = "npm start"
