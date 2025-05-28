@@ -5,8 +5,8 @@ NODE_VERSION = "22" # Aquí usamos la versión principal "22"
 
 # Define los comandos de construcción para tu backend
 [phases.build]
-commands = ["cd backend && npm install"]
+commands = ["npm install"]
 
 # Define el comando de inicio para tu backend
 [start]
-cmd = "cd backend && npm start"
+cmd = "npm start"
