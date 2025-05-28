@@ -1,6 +1,6 @@
 const express = require('express');
 const { getGuides, getGuideById, createGuide, updateGuide, deleteGuide } = require('../controllers/guideController');
-const { verifyToken } = require('../middlewares/authMiddleware');
+const verifyToken = require('../middlewares/authMiddleware'); // Import middleware directly
 
 const router = express.Router();
 
